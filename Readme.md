@@ -1,7 +1,7 @@
 # Portachtzig Neos Piwik Package
 
-[![Version](https://poser.pugx.org/portachtzig/neos-piwik/version)](https://packagist.org/portachtzig/neos-piwik/)
-[![license](https://poser.pugx.org/portachtzig/neos-piwik/license)](https://packagist.org/portachtzig/neos-piwik/)
+[![Version](https://poser.pugx.org/portachtzig/neos-piwik/v/stable)](https://packagist.org/packages/portachtzig/neos-piwik)
+[![license](https://poser.pugx.org/portachtzig/neos-piwik/license)](https://packagist.org/packages/portachtzig/neos-piwik)
 
 **Track visits of your Neos site with Piwik Analytics!**
 
@@ -34,9 +34,14 @@ Inspired by the packages [neos/neos-googleanalytics](https://github.com/neos/neo
 - - -
 
 ## Installation
+Add the following line to your composer.json:
 
 ```
-	$ composer require portachtzig/neos-piwik
+  "portachtzig/neos-piwik" : "~1.0.0"
+```
+after that just run
+```
+	$ composer update
 ```
 
 ## Configuration
