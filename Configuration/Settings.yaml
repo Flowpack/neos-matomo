@@ -2,9 +2,9 @@
 Portachtzig:
   Neos:
     Piwik:
-      host: piwik.portachtzig.com
-      token_auth: 40a75d4453f97fa7d6cc0091647d4294
-      idSite: '4'
+      host: ''
+      token_auth: ''
+      idSite: ''
 TYPO3:
   Neos:
     userInterface:
