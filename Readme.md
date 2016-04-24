@@ -3,7 +3,8 @@
 [![Version](https://poser.pugx.org/portachtzig/neos-piwik/version)](https://packagist.org/portachtzig/neos-piwik/)
 [![license](https://poser.pugx.org/portachtzig/neos-piwik/license)](https://packagist.org/portachtzig/neos-piwik/)
 
-** Track visits of your Neos site with Piwik Analytics!**
+**Track visits of your Neos site with Piwik Analytics!**
+
 This package integrates Piwik Analytics into Neos.
 
 **Features**
@@ -21,11 +22,6 @@ Inspired by the packages [neos/neos-googleanalytics](https://github.com/neos/neo
 > http://piwik.org/
 
 - - -
-- 
-** Content**
-
-[TOC]
-
 
 
 ## Requirements
@@ -75,28 +71,34 @@ Portachtzig Neos Piwik Package is released under the GPL v3 (or later) license.
 ## Screenshots 
 
 ![site settings](Documentation/Images/site-settings.png)
+
 Piwik site settings in Neos
 
 ![visist per day / last week](Documentation/Images/DemoPackage-piwik.png)
+
 Backend view with selected Piwik Panel in the Property Inspector
 
 ![visist per day / last week](Documentation/Images/visits_per_day_month.png)
+
 visits per day in the last month 
 
 ![visist per day / last week](Documentation/Images/visits_per_day_week.png)
+
 visits per day in the last week 
 
 ![hits all time](Documentation/Images/visits_hits_all_time.png)
+
 all time visits and page views (hits) of the selected page
 
-
 ![visist per day / last week](Documentation/Images/visits_per_browser.png)
+
 visits per browser (all time)
 
 ![visist per os ](Documentation/Images/visits_per_os.png)
+
 visits per os (all time)
 
-
 ![visist per os ](Documentation/Images/visits_per_device_cat.png)
+
 visits per device category (all time)
 
