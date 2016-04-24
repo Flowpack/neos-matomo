@@ -1,72 +1,102 @@
-## Portachtzig Neos Piwik Package
+# Portachtzig Neos Piwik Package
 
-#### Track visits in your Neos Site with Piwik!
+[![Version](https://poser.pugx.org/portachtzig/neos-piwik/version)](https://packagist.org/portachtzig/neos-piwik/)
+[![license](https://poser.pugx.org/portachtzig/neos-piwik/license)](https://packagist.org/portachtzig/neos-piwik/)
 
-This adds a Piwik panel to the Property Inspectory and shows individual statistics for the selected page.
-You can edit basic settings for your Piwik site from within the Neos Backend Module.
+** Track visits of your Neos site with Piwik Analytics!**
+This package integrates Piwik Analytics into Neos.
 
-To get it running you simply need to enter your Piwk hostname and token and your're done! The Piwik tracking code will be autmotaically generated for your page.
+**Features**
+ + adds a Backend Module to your Neos instance which helps hooking up a Piwik host and selecting a site for tracking
+ + adds a tab to the Property Inspector, which shows time, device, OS and browser related statistics collected by Piwik
+
+
+Inspired by the packages [neos/neos-googleanalytics](https://github.com/neos/neos-googleanalytics) and [khuppenbauer/MapSeven.Piwik](https://github.com/khuppenbauer/MapSeven.Piwik).
+
 
 - - -
+![piwik-logo](Documentation/Images/piwik.png)
 
 > Piwk - Liberating Analytics
 > http://piwik.org/
 
 - - -
+- 
+** Content**
+
+[TOC]
 
 
-#### Requirements
 
-+ Neos CMS
-+ Running Piwik Installation (http://piwik.org/docs/installation/#the-5-minute-piwik-installation)
-+ https encryption (e.g. let's encrypt)
-+ cURL
+## Requirements
+
++ **cURL php extension** for api calls
++ **Neos CMS** > 2.0
++ A **Piwik instance** that is reachable via **https**
++ A Neos Backend User with the Role **TYPO3.Neos:Administrator**
 
 - - -
 
-#### Installation
+## Installation
 
 ```
-	$ composer install portachtzig/neos-piwik
+	$ composer require portachtzig/neos-piwik
 ```
 
-### Configuration
-To connect Neos with your Piwik installation you just have to enter your hostname and token_auth in the Neos Backend Module "Piwik" and select the site you cretaed in Piwik to track your user's statistics.
+## Configuration
+After the package has been installed, there will be an additional Backend Module in Neos, called "Piwik".
+Depending on your current FLOW_CONTEXT you might want to flush the cache.
 
-+ enter hostname of your Piwik installation
-The host has to be reachable via https.
+![piwik-logo](Documentation/Images/index.png)
 
-+ enter token_auth of a piwik admin user
-You have to enter a valid auth token of an Piwik admin user.
 
-+ select Piwik site you want to connect your Neos Site with
-You need to create a Piwik Site which will track
+To connect Neos with your Piwik installation you just have to enter your hostname and token_auth in the Backend Module and select the site you created in Piwik to track your user's statistics.
 
-#### Configure Piwik Site
-**options**
-+ name of Site
-this will change the name of your Piwik site
 
-+ main URL
-the primary URL for which Piwik will track visits
++ **Host**
+You can skip the protocol prefix, because https is forced here, since the authentication token is an URL parameter.
 
-+ Exclude IPs
-IP addresses Piwik tracking should be disabled for.
++ **Token**
+You have to enter a valid auth token of a Piwik superuser, because only superusers can list and edit sites in Piwik.
 
-+ Excluded Parameters
-URL Query parameters
++ **Piwik Site to use for this Neos installation**
+After the connection has been established, the form will provide you with a site select box.
 
-+ Site Search
-Track internal search requests.
+Additionally you will be able to edit basic settings of all your Piwik sites.
 
-+ Time Zone
-Set  the time zone for your Piwik site.
+## License
+Portachtzig Neos Piwik Package is released under the GPL v3 (or later) license.
 
-+ Currency
-Set a currency for your Piwik site.
+## Contact
 
-### View statistics 
+**Christian Richter** <chri@portachtzig.com>
+**Sarah Rehbock** <sar@portachtzig.com>
+
+## Screenshots 
+
+![site settings](Documentation/Images/site-settings.png)
+Piwik site settings in Neos
+
+![visist per day / last week](Documentation/Images/DemoPackage-piwik.png)
+Backend view with selected Piwik Panel in the Property Inspector
+
+![visist per day / last week](Documentation/Images/visits_per_day_month.png)
+visits per day in the last month 
 
 ![visist per day / last week](Documentation/Images/visits_per_day_week.png)
+visits per day in the last week 
 
+![hits all time](Documentation/Images/visits_hits_all_time.png)
+all time visits and page views (hits) of the selected page
+
+
+![visist per day / last week](Documentation/Images/visits_per_browser.png)
+visits per browser (all time)
+
+![visist per os ](Documentation/Images/visits_per_os.png)
+visits per os (all time)
+
+
+![visist per os ](Documentation/Images/visits_per_device_cat.png)
+visits per device category (all time)
 
