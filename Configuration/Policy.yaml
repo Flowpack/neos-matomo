@@ -1,0 +1,10 @@
+privilegeTargets:
+  TYPO3\Flow\Security\Authorization\Privilege\Method\MethodPrivilege:
+    Portachtzig_Neos_Piwik_Backend_Module:
+      matcher: method(Portachtzig\Neos\Piwik\Controller\Module\PiwikController->(index|update|editSite|updateSite)Action())
+roles:
+  'TYPO3.Neos:Administrator':
+    privileges:
+      -
+        privilegeTarget: Portachtzig_Neos_Piwik_Backend_Module
+        permission: GRANT

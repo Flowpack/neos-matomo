@@ -1,0 +1,209 @@
+#
+# Add the Piwik mixin to TYPO3.Neos:Document
+#
+'TYPO3.Neos:Document':
+  superTypes:
+    'Portachtzig.Neos.Piwik.StatsTabMixin': 'Portachtzig.Neos.Piwik:StatsTabMixin'
+
+'TYPO3.Neos:Shortcut':
+  superTypes:
+    'Portachtzig.Neos.Piwik.StatsTabMixin': ~
+
+#
+# Mixin configuring the Piwik tab for the inspector
+#
+'Portachtzig.Neos.Piwik:StatsTabMixin':
+  ui:
+    inspector:
+      tabs:
+        stats:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:tabs.stats'
+          position: 100
+          icon: 'icon-bar-chart'
+      groups:
+        timebased:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.timebased'
+          position: 10
+          tab: 'stats'
+        generalInfo:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.generalInfo'
+          position: 20
+          tab: 'stats'
+        types:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.types'
+          position: 30
+          tab: 'stats'
+        outlinks:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.outlinks'
+          position: 40
+          tab: 'stats'
+
+      # All analytics metrics are "views" for the inspector
+      #
+      # Stats for the Piwik data source are configured in Settings.yaml.
+      views:
+        uniqueVisitsLastWeek:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisits'
+          group: 'timebased'
+          position: 10
+          view: 'Content/Inspector/Views/Data/TimeSeriesView'
+          viewOptions:
+            subtitle: 'last week'
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'TimeSeriesView'
+              method: 'Actions.getPageUrl'
+              date: 'last7'
+              period: 'day'
+            collection: 'rows'
+            series:
+              timeData: 'date'
+              valueData: 'nb_visits'
+            chart:
+              selectedInterval: 'days'
+
+        uniqueVisitsLastMonth:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisits'
+          group: 'timebased'
+          position: 20
+          view: 'Content/Inspector/Views/Data/TimeSeriesView'
+          viewOptions:
+            subtitle: 'last month'
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'TimeSeriesView'
+              method: 'Actions.getPageUrl'
+              date: 'last30'
+              period: 'day'
+            collection: 'rows'
+            series:
+              timeData: 'date'
+              valueData: 'nb_visits'
+            chart:
+              selectedInterval: 'weeks'
+
+        generalInfo:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.generalInfo'
+          group: 'generalInfo'
+          position: 10
+          view: 'Content/Inspector/Views/Data/ColumnView'
+          viewOptions:
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'ColumnView'
+              method: 'Actions.getPageUrl'
+              date: 'last1'
+              period: 'year'
+            hero:
+              data: 'totals.nb_visits'
+              label: 'Visits'
+            columns:
+              -
+                data: 'totals.nb_hits'
+                label: 'Hits'
+
+        uniqueVisitsByDeviceCategory:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByDeviceCategory'
+          group: 'types'
+          position: 10
+          view: 'Content/Inspector/Views/Data/TableView'
+          viewOptions:
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'TableView'
+              method: 'DevicesDetection.getType'
+              date: 'last1'
+              period: 'year'
+              type: 'device'
+            collection: 'rows'
+            columns:
+              -
+                data: 'deviceCategory'
+                iconMap:
+                  desktop: 'icon-desktop'
+                  tablet: 'icon-tablet'
+                  smartphone: 'icon-mobile-phone'
+              -
+                data: 'uniquePageviews'
+                suffix: ' visits'
+              -
+                data: 'percent'
+                suffix: '%'
+
+        uniqueVisitsByOsFamiles:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByOsFamilies'
+          group: 'types'
+          position: 20
+          view: 'Content/Inspector/Views/Data/TableView'
+          viewOptions:
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'TableView'
+              method: 'DevicesDetection.getOsFamilies'
+              date: 'last1'
+              period: 'year'
+              type: 'osFamilies'
+            collection: 'rows'
+            columns:
+              -
+                data: 'osFamilies'
+                iconMap:
+                  'Apple': 'icon-apple'
+                  'iOS': 'icon-apple'
+                  'Windows': 'icon-windows'
+                  'GNU/Linux': 'icon-linux'
+                  'Android': 'icon-android'
+              -
+                data: 'uniquePageviews'
+                suffix: ' visits'
+              -
+                data: 'percent'
+                suffix: '%'
+
+        uniqueVisitsByBrowsers:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByBrowsers'
+          group: 'types'
+          position: 30
+          view: 'Content/Inspector/Views/Data/TableView'
+          viewOptions:
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'TableView'
+              method: 'DevicesDetection.getBrowsers'
+              date: 'last1'
+              period: 'year'
+              type: 'browsers'
+            collection: 'rows'
+            columns:
+              -
+                data: 'browsers'
+              -
+                data: 'uniquePageviews'
+                suffix: ' visits'
+              -
+                data: 'percent'
+                suffix: '%'
+
+        uniqueVisitsByOutlinks:
+          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByOutlinks'
+          group: 'outlinks'
+          position: 10
+          view: 'Content/Inspector/Views/Data/TableView'
+          viewOptions:
+            dataSource: 'portachtzig-neos-piwik'
+            arguments:
+              view: 'TableView'
+              method: 'Actions.getOutlinks'
+              date: 'last1'
+              period: 'year'
+              type: 'outlinks'
+            collection: 'rows'
+            columns:
+              -
+                data: 'outlinks'
+              -
+                data: 'visits'
+                suffix: ' visits'
+              -
+                data: 'percent'
+                suffix: '%'

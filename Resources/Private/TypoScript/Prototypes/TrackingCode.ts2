@@ -1,0 +1,6 @@
+# A Piwik tracking code object
+#
+prototype(Portachtzig.Neos.Piwik:TrackingCode) < prototype(TYPO3.TypoScript:Template) {
+	@if.inLiveWorkspace = ${node.context.workspaceName == 'live'}
+	templatePath = 'resource://Portachtzig.Neos.Piwik/Private/Templates/Prototypes/TrackingCode.html'
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" product-name="Portachtzig.Neos.Piwik" source-language="en" datatype="plaintext" target-language="de">
+    <body>
+      <trans-unit id="tabs.stats" xml:space="preserve" approved="yes">
+				<source>Stats</source>
+			<target xml:lang="de">Statistiken</target>
+	  </trans-unit>
+      <trans-unit id="groups.timebased" xml:space="preserve" approved="yes">
+				<source>Time-Based Analytics</source>
+			<target xml:lang="de">Zeitbasierte Statistiken</target><alt-trans><target xml:lang="de">Zeitbasierte Statistiken</target></alt-trans>
+	  </trans-unit>
+
+      <trans-unit id="groups.generalInfo" xml:space="preserve" approved="yes">
+				<source>General Info</source>
+			<target xml:lang="de">Allgemein</target>
+	  </trans-unit>
+		<trans-unit id="groups.types" xml:space="preserve">
+			<source>User Types</source>
+			<target xml:lang="de">Benutzer Typen</target>
+		</trans-unit>
+		<trans-unit id="groups.outlinks" xml:space="preserve">
+				<source>Outlinks</source>
+			<target xml:lang="de">Outlinks dieser Seite</target>
+		</trans-unit>
+		 <trans-unit id="views.generalInfo" xml:space="preserve" approved="yes">
+			<source>All Time</source>
+			<target xml:lang="de">Alle Zeit / Langzeit</target>
+	  	</trans-unit>
+		<trans-unit id="views.uniqueVisits" xml:space="preserve" approved="yes">
+			<source>Visits per Day</source>
+			<target xml:lang="de">Besuche pro Tag</target><alt-trans><target xml:lang="de">Besuche pro Tag</target></alt-trans>
+		</trans-unit>
+		<trans-unit id="views.uniqueVisitsByDeviceCategory" xml:space="preserve">
+				<source>Visits per Device Category</source>
+			<target xml:lang="de">Besuche pro Geräteklasse</target>
+		</trans-unit>
+		<trans-unit id="views.uniqueVisitsByOsFamilies" xml:space="preserve">
+			<source>Visits per OS</source>
+			<target xml:lang="de">Besuche pro Betriebssystem</target>
+		</trans-unit>
+		<trans-unit id="views.uniqueVisitsByBrowsers" xml:space="preserve">
+			<source>Visits per Browser</source>
+			<target xml:lang="de">Besuche pro Browser</target>
+		</trans-unit>
+		<trans-unit id="views.uniqueVisitsByOutlinks" xml:space="preserve">
+			<source>Visits per Outlink</source>
+			<target xml:lang="de">Besuche pro Outlink</target>
+		</trans-unit>
+
+	</body>
+  </file>
+</xliff>
