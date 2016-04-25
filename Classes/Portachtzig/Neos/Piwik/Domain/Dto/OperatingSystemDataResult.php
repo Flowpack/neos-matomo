@@ -45,7 +45,7 @@ class OperatingSystemDataResult implements \JsonSerializable
         );
 
         foreach ($results as $year => $devices) {
-            if (!empty($devices)) {
+            if (is_array($devices)) {
                 foreach ($devices as $device) {
                     if ($device['label'] == 'GNU/Linux') {
                         $clientOperatingSystems['GNU/Linux'] = $clientOperatingSystems['GNU/Linux'] + $device['nb_visits'];
