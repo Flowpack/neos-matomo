@@ -39,7 +39,7 @@ class OutlinkDataResult implements \JsonSerializable
         $visitedOutlinks = array();
         $allOutlinks = array();
         foreach ($results as $year => $devices) {
-            if (!empty($devices)) {
+            if (is_array($devices)) {
                 foreach ($devices as $device) {
                     $totalVisits = $totalVisits + $device['nb_hits'];
 

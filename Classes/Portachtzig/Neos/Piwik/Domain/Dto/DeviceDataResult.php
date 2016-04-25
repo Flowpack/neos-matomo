@@ -43,7 +43,7 @@ class DeviceDataResult implements \JsonSerializable
         );
 
         foreach ($results as $year => $devices) {
-            if (!empty($devices)) {
+            if (is_array($devices)) {
                 foreach ($devices as $device) {
                     if ($device['label'] == 'Desktop') {
                         $clientDevices['Desktop'] = $clientDevices['Desktop'] + $device['nb_visits'];
