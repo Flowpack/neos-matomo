@@ -4,7 +4,7 @@
     "description": "Track visits of your Neos site with Piwik Analytics!",
     "license": "GPL-3.0+",
     "require": {
-        "typo3/neos": "~2.1.0",
+        "typo3/neos": ">2.1.0",
         "ext-curl": "*"
     },
     "autoload": {
