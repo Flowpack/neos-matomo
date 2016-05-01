@@ -3,6 +3,7 @@ Portachtzig:
   Neos:
     Piwik:
       host: ''
+      protocol: 'https'
       token_auth: ''
       idSite: ''
 TYPO3:

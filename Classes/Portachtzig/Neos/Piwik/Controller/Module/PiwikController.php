@@ -90,6 +90,7 @@ class PiwikController extends AbstractModuleController
         $settings = $this->configurationSource->load($configurationPath . ConfigurationManager::CONFIGURATION_TYPE_SETTINGS);
         $piwik['host'] = preg_replace("(^https?://)", "", $piwik['host']);
         $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.host', $piwik['host']);
+        $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.protocol', $piwik['protocol']);
         $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.token_auth', $piwik['token_auth']);
         if (array_key_exists('idSite', $piwik)) {
             $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.idSite', $piwik['idSite']);

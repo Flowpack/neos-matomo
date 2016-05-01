@@ -70,7 +70,7 @@ class Reporting extends AbstractServiceController
                 }
             }
             // @todo force https here or throw error ?
-            $apiCallUrl = 'https://' . $this->settings['host'] . '/index.php?module=API&format=json&' . $params;
+            $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json&' . $params;
             $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
             $this->browser->setRequestEngine($this->browserRequestEngine);
             $response = $this->browser->request($apiCallUrl);
@@ -97,7 +97,7 @@ class Reporting extends AbstractServiceController
                 }
             }
 
-            $apiCallUrl = 'https://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
+            $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
             $apiCallUrl .= '&pageUrl=' . urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
             $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
             $this->browser->setRequestEngine($this->browserRequestEngine);

@@ -1,18 +1,12 @@
 <f:layout name="Default" />
 
 <f:section name="Title">
-
-	<p>
 	<img src="{piwikHost.headerLogo.value}" alt="Piwik Logo">
-		<br><br>
-	<h1>
-		Piwik Host Information
-	</h1>
+	<br><br>
+	<h1>Piwik Host Information</h1>
 	<br>
-	</p>
 </f:section>
 <f:section name="Content">
-
 	<f:flashMessages />
 	<div class="neos-row-fluid">
 		<div class="neos-span4">
@@ -32,9 +26,6 @@
 				</tr>
 			</table>
 		</div>
-		<div class="neos-span7 neos-offset1">
-
-		</div>
 	</div>
 	<f:form action="update" name="piwik" object="{settings}">
 		<fieldset>
@@ -43,17 +34,51 @@
 					<br>
 					<h1>Configuration</h1>
 					<br>
-
 					<div class="neos-control-group">
 						<label class="neos-control-label" for="host">Host</label>
-
 						<div class="neos-controls">
 							<f:form.textfield property="host" id="host" class="neos-span12" required="true" />
 						</div>
-
-
 					</div>
+					<div class="neos-controls">
+						<br>
+						<label class="neos-control-label" for="protocol">Protocol </label>
+						<label class="neos-radio neos-inline" for="https_protocol">
+							<f:form.radio property="protocol" id="https_protocol" value="https"
+										  checked="{settings.protocol} == 'https'"/> https
+							<span></span>
+						</label>
+						<label class="neos-radio neos-inline " for="http_protocol" >
+							<f:form.radio property="protocol" id="http_protocol"
+										  value="http" checked="{settings.protocol} == 'http'" /> http
+							<span></span>
+						</label>
+						<span data-toggle="modal" class="neos-inline neos-button neos-button-small"
+							  href="#protocol-modal">?</span>
+					</div>
+					<div class="neos-hide" id="protocol-modal">
+						<div class="neos-modal">
+							<div class="neos-modal-header">
+								<button type="button" class="neos-close neos-button" data-dismiss="modal"></button>
+								<div class="neos-header">Warning</div>
+							</div>
+							<div class="neos-subheader">
+								<p>
+									 Be aware that using <b>HTTP</b> for communication with your Piwik host
+									<b>{settings.host}</b> will result in your super user's auth_token being transmitted as an unencrypted URL parameter!
+									<br>
+									<br>
+								</p>
+							</div>
+							<div class="neos-modal-footer">
+								<a href="#" class="neos-button" data-dismiss="modal">OK</a>
+							</div>
+						</div>
+						<div class="neos-modal-backdrop neos-in"></div>
+					</div>
+
 					<div class="neos-control-group">
+						<br>
 						<label class="neos-control-label" for="token_auth">Token</label>
 						<div class="neos-controls">
 							<f:form.textfield property="token_auth" id="token_auth" class="neos-span12" required="true" />
@@ -64,24 +89,22 @@
 							</small>
 						</p>
 					</div>
-
-					<f:if condition="{piwikError} != 1">
-						<div class="neos-control-group">
-							<label class="neos-control-label" for="idSite">Piwik Site to use for this Neos installation:</label>
-							<div class="neos-controls">
-
-								<select name="moduleArguments[piwik][idSite]" id="idSite" class="neos-span12" >
-
-									<f:for each="{piwikHost.sites}" as="site">
-
-										<option value="{site.idsite}" {f:if(condition:'{settings.idSite} == {site.idsite}',then:'selected="selected"')}>{site.name}</option>
-
-									</f:for>
-
-								</select>
-
+					<f:if condition="{settings.token_auth}">
+						<f:if condition="{piwikError} != 1">
+							<div class="neos-control-group">
+								<br>
+								<label class="neos-control-label" for="idSite">Piwik Site to use for this Neos installation:</label>
+								<div class="neos-controls">
+									<select name="moduleArguments[piwik][idSite]" id="idSite" class="neos-span12" >
+										<f:for each="{piwikHost.sites}" as="site">
+											<option value="{site.idsite}"
+													{f:if(condition:'{settings.idSite} == {site.idsite}',then:'selected="selected"')}>
+											{site.name}</option>
+										</f:for>
+									</select>
+								</div>
 							</div>
-						</div>
+						</f:if>
 					</f:if>
 				</fieldset>
 
@@ -120,6 +143,5 @@
 			</div>
 		</fieldset>
 	</f:form>
-
 	<f:form action="index" id="postHelper" method="post"></f:form>
 </f:section>
