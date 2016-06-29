@@ -96,9 +96,16 @@ class Reporting extends AbstractServiceController
                     $params .= '&' . $key . '=' . rawurlencode($value);
                 }
             }
+            
+            try {
+               $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+            }
+            catch(StatisticsNotAvailableException $err) {
+               return;
+            }
 
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
-            $apiCallUrl .= '&pageUrl=' . urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+            $apiCallUrl .= '&pageUrl=' . $pageUrl;
             $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
             $this->browser->setRequestEngine($this->browserRequestEngine);
 
@@ -113,25 +120,25 @@ class Reporting extends AbstractServiceController
                 return new ColumnDataResult($response);
             }
             if ($arguments['type'] == 'device') {
-                $apiCallUrl .= '&segment=pageUrl==' . urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
                 $response = $this->browser->request($apiCallUrl);
 
                 return new DeviceDataResult($response);
             }
             if ($arguments['type'] == 'osFamilies') {
-                $apiCallUrl .= '&segment=pageUrl==' . urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
                 $response = $this->browser->request($apiCallUrl);
 
                 return new OperatingSystemDataResult($response);
             }
             if ($arguments['type'] == 'browsers') {
-                $apiCallUrl .= '&segment=pageUrl==' . urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
                 $response = $this->browser->request($apiCallUrl);
 
                 return new BrowserDataResult($response);
             }
             if ($arguments['type'] == 'outlinks') {
-                $apiCallUrl .= '&segment=pageUrl==' . urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
                 $response = $this->browser->request($apiCallUrl);
 
                 return new OutlinkDataResult($response);
