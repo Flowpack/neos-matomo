@@ -1,6 +1,13 @@
 # A Piwik tracking code object
 #
 prototype(Portachtzig.Neos.Piwik:TrackingCode) < prototype(TYPO3.TypoScript:Template) {
-	@if.inLiveWorkspace = ${node.context.workspaceName == 'live'}
 	templatePath = 'resource://Portachtzig.Neos.Piwik/Private/Templates/Prototypes/TrackingCode.html'
+	settings = ${Configuration.setting('Portachtzig.Neos.Piwik')}
+
+	// Show tracking code only in live workspace and if all necessary parameters are set
+	@if {
+		inLiveWorkspace = ${node.context.workspaceName == 'live'}
+		hostIsSet = ${settings.host}
+		idSiteIsSet = ${settings.idSite}
+	}
 }
