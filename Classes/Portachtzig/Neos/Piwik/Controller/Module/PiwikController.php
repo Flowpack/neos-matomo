@@ -12,10 +12,10 @@ namespace Portachtzig\Neos\Piwik\Controller\Module;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Configuration\Source\YamlSource;
-use Neos\Flow\Error\Message;
+use Neos\Error\Messages\Message;
 use Neos\Flow\Http\Client\CurlEngineException;
 use Neos\Flow\Package\PackageManagerInterface;
-use Neos\Flow\Utility\Arrays;
+use Neos\Utility\Arrays;
 use TYPO3\Neos\Controller\Module\AbstractModuleController;
 
 /**
