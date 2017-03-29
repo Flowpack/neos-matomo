@@ -9,8 +9,6 @@ namespace Portachtzig\Neos\Piwik;
  * source code.
  */
 
-use Neos\Flow\Annotations as Flow;
-
 /**
  * Base exception for GoogleAnalytics package
  */
