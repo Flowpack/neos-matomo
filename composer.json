@@ -69,7 +69,8 @@
             "Neos.Kickstarter-20161125110814",
             "Neos.Neos-20161125122412",
             "Neos.Flow-20161125124112",
-            "Neos.SwiftMailer-20161130105617"
+            "Neos.SwiftMailer-20161130105617",
+            "TYPO3.FluidAdaptor-20161130112935"
         ]
     }
 }
