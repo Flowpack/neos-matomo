@@ -10,20 +10,22 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
+use Neos\Flow\Http\Response;
+
 abstract class AbstractDataResult implements \JsonSerializable
 {
 
     /**
-     * The Piwik response, formatted as a json string
+     * The response from Piwik containing serialized json data
      *
-     * @var string
+     * @var Response
      */
     protected $response;
 
     /**
-     * @param string $response
+     * @param Response $response
      */
-    public function __construct($response)
+    public function __construct(Response $response)
     {
         $this->response = $response;
     }
