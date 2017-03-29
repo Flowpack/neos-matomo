@@ -1,6 +1,6 @@
 include: 'Prototypes/*'
 
-prototype(TYPO3.Neos:Page) {
+prototype(Neos.Neos:Page) {
   piwikTrackingCode = Portachtzig.Neos.Piwik:TrackingCode {
     # Google suggests to include the tracking code directly after the <body> tag
     @position = 'end'
