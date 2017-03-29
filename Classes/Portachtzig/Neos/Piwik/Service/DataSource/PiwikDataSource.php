@@ -11,7 +11,7 @@ namespace Portachtzig\Neos\Piwik\Service\DataSource;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
-use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
 
 class PiwikDataSource extends AbstractDataSource
 {
