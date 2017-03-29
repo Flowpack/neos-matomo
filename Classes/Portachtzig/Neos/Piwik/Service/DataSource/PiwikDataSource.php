@@ -9,7 +9,7 @@ namespace Portachtzig\Neos\Piwik\Service\DataSource;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
+use Neos\Flow\Annotations as Flow;
 use TYPO3\Neos\Service\DataSource\AbstractDataSource;
 use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
 

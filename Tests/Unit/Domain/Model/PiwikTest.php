@@ -9,7 +9,7 @@ namespace Portachtzig\Neos\Piwik\Tests\Unit\Domain\Model;
 /**
  * Testcase for Piwik
  */
-class PiwikTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class PiwikTest extends \Neos\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
