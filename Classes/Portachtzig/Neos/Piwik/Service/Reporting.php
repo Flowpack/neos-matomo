@@ -1,4 +1,5 @@
 <?php
+
 namespace Portachtzig\Neos\Piwik\Service;
 
 /*
@@ -97,12 +98,11 @@ class Reporting extends AbstractServiceController
                     $params .= '&' . $key . '=' . rawurlencode($value);
                 }
             }
-            
+
             try {
-               $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
-            }
-            catch(StatisticsNotAvailableException $err) {
-               return null;
+                $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+            } catch (StatisticsNotAvailableException $err) {
+                return null;
             }
 
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
