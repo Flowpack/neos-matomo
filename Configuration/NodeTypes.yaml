@@ -4,10 +4,10 @@
 
 'TYPO3.Neos:Document':
   superTypes:
-    Portachtzig.Neos.Piwik.StatsTabMixin: 'Portachtzig.Neos.Piwik:StatsTabMixin'
+    'Portachtzig.Neos.Piwik:StatsTabMixin': true
 'TYPO3.Neos:Shortcut':
   superTypes:
-    Portachtzig.Neos.Piwik.StatsTabMixin: ''
+    '': true
 'Portachtzig.Neos.Piwik:StatsTabMixin':
   ui:
     inspector:
