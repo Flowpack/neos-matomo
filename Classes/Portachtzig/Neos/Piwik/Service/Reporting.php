@@ -21,7 +21,7 @@ use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
 use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
-use TYPO3\Neos\Service\Controller\AbstractServiceController;
+use Neos\Neos\Service\Controller\AbstractServiceController;
 
 
 // @todo add exceptions
@@ -37,7 +37,7 @@ class Reporting extends AbstractServiceController
 
     /**
      * @Flow\Inject
-     * @var \TYPO3\Neos\Service\LinkingService
+     * @var \Neos\Neos\Service\LinkingService
      */
     protected $linkingService;
 

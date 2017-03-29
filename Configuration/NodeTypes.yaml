@@ -1,11 +1,11 @@
 #
-# Add the Piwik mixin to TYPO3.Neos:Document
+# Add the Piwik mixin to Neos.Neos:Document
 #
 
-'TYPO3.Neos:Document':
+'Neos.Neos:Document':
   superTypes:
     'Portachtzig.Neos.Piwik:StatsTabMixin': true
-'TYPO3.Neos:Shortcut':
+'Neos.Neos:Shortcut':
   superTypes:
     '': true
 'Portachtzig.Neos.Piwik:StatsTabMixin':

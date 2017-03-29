@@ -16,7 +16,7 @@ use Neos\Error\Messages\Message;
 use Neos\Flow\Http\Client\CurlEngineException;
 use Neos\Flow\Package\PackageManagerInterface;
 use Neos\Utility\Arrays;
-use TYPO3\Neos\Controller\Module\AbstractModuleController;
+use Neos\Neos\Controller\Module\AbstractModuleController;
 
 /**
  * Piwik Site Management Module Controller
