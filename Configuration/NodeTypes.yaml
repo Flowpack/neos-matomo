@@ -5,10 +5,13 @@
 'Neos.Neos:Document':
   superTypes:
     'Portachtzig.Neos.Piwik:StatsTabMixin': true
+
 'Neos.Neos:Shortcut':
   superTypes:
-    '': true
+    'Portachtzig.Neos.Piwik:StatsTabMixin': true
+
 'Portachtzig.Neos.Piwik:StatsTabMixin':
+  abstract: true
   ui:
     inspector:
       tabs:
