@@ -37,9 +37,9 @@ class TimeSeriesDataResult extends AbstractDataResult
             $i++;
         }
 
-        return array(
-            'totals' => array('nb_visits' => $totalVisits, 'nb_hits' => $totalHits),
+        return [
+            'totals' => ['nb_visits' => $totalVisits, 'nb_hits' => $totalHits],
             'rows' => $rows
-        );
+        ];
     }
 }

@@ -19,8 +19,8 @@ class OutlinkDataResult extends AbstractDataResult
     {
         $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
-        $visitedOutlinks = array();
-        $allOutlinks = array();
+        $visitedOutlinks = [];
+        $allOutlinks = [];
         foreach ($results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
@@ -31,18 +31,18 @@ class OutlinkDataResult extends AbstractDataResult
                     $outlink = $device['label'];
                     $visitedOutlinks[$outlink] = 0;
                     $visitedOutlinks[$outlink] = $visitedOutlinks[$outlink] + $device['nb_hits'];
-                    $allOutlinks[] = array(
+                    $allOutlinks[] = [
                         'outlinks' => $outlink,
                         'visits' => $visitedOutlinks[$outlink],
                         'percent' => ($totalVisits == 0 ? 0 : round(($visitedOutlinks[$outlink] * 100 / $totalVisits)))
-                    );
+                    ];
                 }
             }
         }
 
-        return array(
-            'totals' => array('visits' => $totalVisits),
+        return [
+            'totals' => ['visits' => $totalVisits],
             'rows' => $allOutlinks
-        );
+        ];
     }
 }

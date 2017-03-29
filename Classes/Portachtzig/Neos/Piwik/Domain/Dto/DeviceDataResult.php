@@ -19,11 +19,11 @@ class DeviceDataResult extends AbstractDataResult
     {
         $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
-        $clientDevices = array(
+        $clientDevices = [
             'Desktop' => 0,
             'Tablet' => 0,
             'Smartphone' => 0
-        );
+        ];
 
         foreach ($results as $year => $devices) {
             if (is_array($devices)) {
@@ -42,13 +42,13 @@ class DeviceDataResult extends AbstractDataResult
             }
         }
 
-        return array(
-            'totals' => array('uniquePageviews' => $totalVisits),
-            'rows' => array(
-                array('deviceCategory' => 'desktop', 'uniquePageviews' => $clientDevices['Desktop'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Desktop'] * 100 / $totalVisits)))),
-                array('deviceCategory' => 'tablet', 'uniquePageviews' => $clientDevices['Tablet'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Tablet'] * 100 / $totalVisits)))),
-                array('deviceCategory' => 'smartphone', 'uniquePageviews' => $clientDevices['Smartphone'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Smartphone'] * 100 / $totalVisits))))
-            )
-        );
+        return [
+            'totals' => ['uniquePageviews' => $totalVisits],
+            'rows' => [
+                ['deviceCategory' => 'desktop', 'uniquePageviews' => $clientDevices['Desktop'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Desktop'] * 100 / $totalVisits)))],
+                ['deviceCategory' => 'tablet', 'uniquePageviews' => $clientDevices['Tablet'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Tablet'] * 100 / $totalVisits)))],
+                ['deviceCategory' => 'smartphone', 'uniquePageviews' => $clientDevices['Smartphone'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Smartphone'] * 100 / $totalVisits)))]
+            ]
+        ];
     }
 }
