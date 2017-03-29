@@ -27,6 +27,6 @@ Neos:
               index:
                 label: 'Configure piwik'
                 title: 'Configure piwik'
-    typoScript:
+    fusion:
       autoInclude:
         Portachtzig.Neos.Piwik: true
