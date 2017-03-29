@@ -9,25 +9,8 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
-use Neos\Flow\Annotations as Flow;
-
-class TimeSeriesDataResult implements \JsonSerializable
+class TimeSeriesDataResult extends AbstractDataResult
 {
-
-    /**
-     * The Piwik response, formatted as a json string
-     *
-     * @var string
-     */
-    protected $response;
-
-    /**
-     * @param string $response
-     */
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
 
     /**
      * {@inheritdoc}
@@ -38,6 +21,8 @@ class TimeSeriesDataResult implements \JsonSerializable
         $i = 0;
         $totalVisits = 0;
         $totalHits = 0;
+        $rows = [];
+        
         foreach ($results as $key => $value) {
             if (!empty($value) && is_array($value)) {
                 $rows[$i]['date'] = $key;

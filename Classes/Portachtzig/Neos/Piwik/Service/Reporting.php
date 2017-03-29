@@ -9,6 +9,7 @@ namespace Portachtzig\Neos\Piwik\Service;
  * source code.
  */
 
+use Portachtzig\Neos\Piwik\Domain\Dto\AbstractDataResult;
 use Portachtzig\Neos\Piwik\Exception\StatisticsNotAvailableException;
 use Portachtzig\Neos\Piwik\Domain\Dto\TimeSeriesDataResult;
 use Portachtzig\Neos\Piwik\Domain\Dto\ColumnDataResult;
@@ -85,7 +86,7 @@ class Reporting extends AbstractServiceController
      * @param $node NodeInterface
      * @param $controllerContext ControllerContext
      * @param $arguments array
-     * @return DataResult
+     * @return AbstractDataResult
      */
     public function getNodeStatistics($node = NULL, $controllerContext = NULL, $arguments = array())
     {
@@ -101,7 +102,7 @@ class Reporting extends AbstractServiceController
                $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
             }
             catch(StatisticsNotAvailableException $err) {
-               return;
+               return null;
             }
 
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;

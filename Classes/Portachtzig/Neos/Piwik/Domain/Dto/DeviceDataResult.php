@@ -9,25 +9,8 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
-use Neos\Flow\Annotations as Flow;
-
-class DeviceDataResult implements \JsonSerializable
+class DeviceDataResult extends AbstractDataResult
 {
-
-    /**
-     * The Piwik response, formatted as a json string
-     *
-     * @var string
-     */
-    protected $response;
-
-    /**
-     * @param string $response
-     */
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
 
     /**
      * {@inheritdoc}
