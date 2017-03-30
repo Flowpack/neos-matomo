@@ -9,12 +9,10 @@ namespace Portachtzig\Neos\Piwik;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
-
 /**
  * Base exception for GoogleAnalytics package
  */
-class Exception extends \TYPO3\Flow\Exception
+class Exception extends \Neos\Flow\Exception
 {
 
 }

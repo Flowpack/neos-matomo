@@ -27,21 +27,17 @@ Inspired by the packages [neos/neos-googleanalytics](https://github.com/neos/neo
 ## Requirements
 
 + **cURL php extension** for api calls
-+ **Neos CMS** > 2.0
++ **Neos CMS** >= 3.0
 + A **Piwik instance** that is reachable via **https**
-+ A Neos Backend User with the Role **TYPO3.Neos:Administrator**
++ A Neos Backend User with the Role **Neos.Neos:Administrator**
 
 - - -
 
 ## Installation
-Add the following line to your composer.json:
 
+Run the following command
 ```
-  "portachtzig/neos-piwik" : "~1.0.0"
-```
-after that just run
-```
-	$ composer update
+	$ composer require portachtzig/neos-piwik
 ```
 
 ## Configuration

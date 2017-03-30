@@ -9,25 +9,8 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
-
-class OutlinkDataResult implements \JsonSerializable
+class OutlinkDataResult extends AbstractDataResult
 {
-
-    /**
-     * The Piwik response, formatted as a json string
-     *
-     * @var string
-     */
-    protected $response;
-
-    /**
-     * @param string $response
-     */
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
 
     /**
      * {@inheritdoc}
@@ -36,8 +19,8 @@ class OutlinkDataResult implements \JsonSerializable
     {
         $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
-        $visitedOutlinks = array();
-        $allOutlinks = array();
+        $visitedOutlinks = [];
+        $allOutlinks = [];
         foreach ($results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
@@ -48,18 +31,18 @@ class OutlinkDataResult implements \JsonSerializable
                     $outlink = $device['label'];
                     $visitedOutlinks[$outlink] = 0;
                     $visitedOutlinks[$outlink] = $visitedOutlinks[$outlink] + $device['nb_hits'];
-                    $allOutlinks[] = array(
+                    $allOutlinks[] = [
                         'outlinks' => $outlink,
                         'visits' => $visitedOutlinks[$outlink],
                         'percent' => ($totalVisits == 0 ? 0 : round(($visitedOutlinks[$outlink] * 100 / $totalVisits)))
-                    );
+                    ];
                 }
             }
         }
 
-        return array(
-            'totals' => array('visits' => $totalVisits),
+        return [
+            'totals' => ['visits' => $totalVisits],
             'rows' => $allOutlinks
-        );
+        ];
     }
 }

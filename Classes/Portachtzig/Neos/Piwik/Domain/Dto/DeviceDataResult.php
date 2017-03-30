@@ -9,25 +9,8 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
-
-class DeviceDataResult implements \JsonSerializable
+class DeviceDataResult extends AbstractDataResult
 {
-
-    /**
-     * The Piwik response, formatted as a json string
-     *
-     * @var string
-     */
-    protected $response;
-
-    /**
-     * @param string $response
-     */
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
 
     /**
      * {@inheritdoc}
@@ -36,11 +19,11 @@ class DeviceDataResult implements \JsonSerializable
     {
         $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
-        $clientDevices = array(
+        $clientDevices = [
             'Desktop' => 0,
             'Tablet' => 0,
             'Smartphone' => 0
-        );
+        ];
 
         foreach ($results as $year => $devices) {
             if (is_array($devices)) {
@@ -59,13 +42,13 @@ class DeviceDataResult implements \JsonSerializable
             }
         }
 
-        return array(
-            'totals' => array('uniquePageviews' => $totalVisits),
-            'rows' => array(
-                array('deviceCategory' => 'desktop', 'uniquePageviews' => $clientDevices['Desktop'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Desktop'] * 100 / $totalVisits)))),
-                array('deviceCategory' => 'tablet', 'uniquePageviews' => $clientDevices['Tablet'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Tablet'] * 100 / $totalVisits)))),
-                array('deviceCategory' => 'smartphone', 'uniquePageviews' => $clientDevices['Smartphone'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Smartphone'] * 100 / $totalVisits))))
-            )
-        );
+        return [
+            'totals' => ['uniquePageviews' => $totalVisits],
+            'rows' => [
+                ['deviceCategory' => 'desktop', 'uniquePageviews' => $clientDevices['Desktop'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Desktop'] * 100 / $totalVisits)))],
+                ['deviceCategory' => 'tablet', 'uniquePageviews' => $clientDevices['Tablet'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Tablet'] * 100 / $totalVisits)))],
+                ['deviceCategory' => 'smartphone', 'uniquePageviews' => $clientDevices['Smartphone'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientDevices['Smartphone'] * 100 / $totalVisits)))]
+            ]
+        ];
     }
 }

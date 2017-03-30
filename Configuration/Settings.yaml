@@ -3,10 +3,10 @@ Portachtzig:
   Neos:
     Piwik:
       host: ''
-      protocol: 'https'
+      protocol: https
       token_auth: ''
       idSite: ''
-TYPO3:
+Neos:
   Neos:
     userInterface:
       translation:
@@ -27,6 +27,6 @@ TYPO3:
               index:
                 label: 'Configure piwik'
                 title: 'Configure piwik'
-    typoScript:
+    fusion:
       autoInclude:
         Portachtzig.Neos.Piwik: true

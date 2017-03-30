@@ -1,4 +1,5 @@
 <?php
+
 namespace Portachtzig\Neos\Piwik\Service;
 
 /*
@@ -9,6 +10,7 @@ namespace Portachtzig\Neos\Piwik\Service;
  * source code.
  */
 
+use Portachtzig\Neos\Piwik\Domain\Dto\AbstractDataResult;
 use Portachtzig\Neos\Piwik\Exception\StatisticsNotAvailableException;
 use Portachtzig\Neos\Piwik\Domain\Dto\TimeSeriesDataResult;
 use Portachtzig\Neos\Piwik\Domain\Dto\ColumnDataResult;
@@ -16,12 +18,12 @@ use Portachtzig\Neos\Piwik\Domain\Dto\DeviceDataResult;
 use Portachtzig\Neos\Piwik\Domain\Dto\OperatingSystemDataResult;
 use Portachtzig\Neos\Piwik\Domain\Dto\BrowserDataResult;
 use Portachtzig\Neos\Piwik\Domain\Dto\OutlinkDataResult;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Mvc\Controller\ControllerContext;
-use TYPO3\Flow\Http\Client\CurlEngine;
-use TYPO3\Flow\Http\Client\Browser;
-use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
-use TYPO3\Neos\Service\Controller\AbstractServiceController;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Mvc\Controller\ControllerContext;
+use Neos\Flow\Http\Client\CurlEngine;
+use Neos\Flow\Http\Client\Browser;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\Neos\Service\Controller\AbstractServiceController;
 
 
 // @todo add exceptions
@@ -37,13 +39,13 @@ class Reporting extends AbstractServiceController
 
     /**
      * @Flow\Inject
-     * @var \TYPO3\Neos\Service\LinkingService
+     * @var \Neos\Neos\Service\LinkingService
      */
     protected $linkingService;
 
     /**
      * @Flow\Inject
-     * @var \TYPO3\TYPO3CR\Domain\Service\ContextFactoryInterface
+     * @var \Neos\ContentRepository\Domain\Service\ContextFactoryInterface
      */
     protected $contextFactory;
 
@@ -85,7 +87,7 @@ class Reporting extends AbstractServiceController
      * @param $node NodeInterface
      * @param $controllerContext ControllerContext
      * @param $arguments array
-     * @return DataResult
+     * @return AbstractDataResult
      */
     public function getNodeStatistics($node = NULL, $controllerContext = NULL, $arguments = array())
     {
@@ -96,12 +98,11 @@ class Reporting extends AbstractServiceController
                     $params .= '&' . $key . '=' . rawurlencode($value);
                 }
             }
-            
+
             try {
-               $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
-            }
-            catch(StatisticsNotAvailableException $err) {
-               return;
+                $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+            } catch (StatisticsNotAvailableException $err) {
+                return null;
             }
 
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
@@ -151,7 +152,7 @@ class Reporting extends AbstractServiceController
      *
      * @param NodeInterface $node
      * @param ControllerContext $controllerContext
-     * @return \TYPO3\Flow\Http\Uri
+     * @return \Neos\Flow\Http\Uri
      * @throws StatisticsNotAvailableException If the node was not yet published and no live workspace URI can be resolved
      */
     protected function getLiveNodeUri(NodeInterface $node, ControllerContext $controllerContext)
@@ -164,7 +165,7 @@ class Reporting extends AbstractServiceController
             throw new StatisticsNotAvailableException('Piwik Statistics are only available on a published node', 1445812693);
         }
         $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, NULL, 'html', TRUE);
-        $nodeUri = new \TYPO3\Flow\Http\Uri($nodeUriString);
+        $nodeUri = new \Neos\Flow\Http\Uri($nodeUriString);
 
         return $nodeUri;
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Portachtzig\Neos\Piwik\Domain\Dto;
 
 /*
@@ -9,40 +10,23 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
-
-class OperatingSystemDataResult implements \JsonSerializable
+class OperatingSystemDataResult extends AbstractDataResult
 {
-    /**
-     * The Piwik response, formatted as a json string
-     *
-     * @var string
-     */
-    protected $response;
-
-    /**
-     * @param string $response
-     */
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
 
     /**
      * {@inheritdoc}
      */
     function jsonSerialize()
     {
-
         $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
-        $clientOperatingSystems = array(
+        $clientOperatingSystems = [
             'GNU/Linux' => 0,
             'iOS' => 0,
             'Apple' => 0,
             'Windows' => 0,
             'Android' => 0
-        );
+        ];
 
         foreach ($results as $year => $devices) {
             if (is_array($devices)) {
@@ -66,16 +50,16 @@ class OperatingSystemDataResult implements \JsonSerializable
                 }
             }
         }
-        return array(
-            'totals' => array('uniquePageviews' => $totalVisits),
-            'rows' => array(
-                array('osFamilies' => 'Apple', 'uniquePageviews' => $clientOperatingSystems['Apple'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['Apple'] * 100 / $totalVisits)))),
-                array('osFamilies' => 'iOS', 'uniquePageviews' => $clientOperatingSystems['iOS'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['iOS'] * 100 / $totalVisits)))),
-                array('osFamilies' => 'Windows', 'uniquePageviews' => $clientOperatingSystems['Windows'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['Windows'] * 100 / $totalVisits)))),
-                array('osFamilies' => 'GNU/Linux', 'uniquePageviews' => $clientOperatingSystems['GNU/Linux'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['GNU/Linux'] * 100 / $totalVisits)))),
-                array('osFamilies' => 'Android', 'uniquePageviews' => $clientOperatingSystems['Android'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['Android'] * 100 / $totalVisits))))
-            )
-        );
+        return [
+            'totals' => ['uniquePageviews' => $totalVisits],
+            'rows' => [
+                ['osFamilies' => 'Apple', 'uniquePageviews' => $clientOperatingSystems['Apple'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['Apple'] * 100 / $totalVisits)))],
+                ['osFamilies' => 'iOS', 'uniquePageviews' => $clientOperatingSystems['iOS'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['iOS'] * 100 / $totalVisits)))],
+                ['osFamilies' => 'Windows', 'uniquePageviews' => $clientOperatingSystems['Windows'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['Windows'] * 100 / $totalVisits)))],
+                ['osFamilies' => 'GNU/Linux', 'uniquePageviews' => $clientOperatingSystems['GNU/Linux'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['GNU/Linux'] * 100 / $totalVisits)))],
+                ['osFamilies' => 'Android', 'uniquePageviews' => $clientOperatingSystems['Android'], 'percent' => ($totalVisits == 0 ? 0 : round(($clientOperatingSystems['Android'] * 100 / $totalVisits)))]
+            ]
+        ];
     }
 
 }

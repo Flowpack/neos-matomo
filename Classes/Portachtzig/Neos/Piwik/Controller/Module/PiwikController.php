@@ -9,14 +9,14 @@ namespace Portachtzig\Neos\Piwik\Controller\Module;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Configuration\ConfigurationManager;
-use TYPO3\Flow\Configuration\Source\YamlSource;
-use TYPO3\Flow\Error\Message;
-use TYPO3\Flow\Http\Client\CurlEngineException;
-use TYPO3\Flow\Package\PackageManagerInterface;
-use TYPO3\Flow\Utility\Arrays;
-use TYPO3\Neos\Controller\Module\AbstractModuleController;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Configuration\ConfigurationManager;
+use Neos\Flow\Configuration\Source\YamlSource;
+use Neos\Error\Messages\Message;
+use Neos\Flow\Http\Client\CurlEngineException;
+use Neos\Flow\Package\PackageManagerInterface;
+use Neos\Utility\Arrays;
+use Neos\Neos\Controller\Module\AbstractModuleController;
 
 /**
  * Piwik Site Management Module Controller

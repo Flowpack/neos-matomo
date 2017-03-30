@@ -1,4 +1,5 @@
 <?php
+
 namespace Portachtzig\Neos\Piwik\Domain\Dto;
 
 /*
@@ -9,26 +10,8 @@ namespace Portachtzig\Neos\Piwik\Domain\Dto;
  * source code.
  */
 
-use TYPO3\Flow\Annotations as Flow;
-
-class BrowserDataResult implements \JsonSerializable
+class BrowserDataResult extends AbstractDataResult
 {
-
-    /**
-     * The Piwik response, formatted as a json string
-     *
-     * @var string
-     */
-    protected $response;
-
-    /**
-     * @param string $response
-     */
-    public function __construct($response)
-    {
-        $this->response = $response;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -36,8 +19,8 @@ class BrowserDataResult implements \JsonSerializable
     {
         $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
-        $clientBrowser = array();
-        $allBrowser = array();
+        $clientBrowser = [];
+        $allBrowser = [];
         foreach ($results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
@@ -47,18 +30,18 @@ class BrowserDataResult implements \JsonSerializable
                     $browser = $device['label'];
                     $clientBrowser[$browser] = 0;
                     $clientBrowser[$browser] = $clientBrowser[$browser] + $device['nb_visits'];
-                    $allBrowser[] = array(
+                    $allBrowser[] = [
                         'browsers' => $browser,
                         'uniquePageviews' => $clientBrowser[$browser],
                         'percent' => ($totalVisits == 0 ? 0 : round(($clientBrowser[$browser] * 100 / $totalVisits)))
-                    );
+                    ];
                 }
             }
         }
-        return array(
-            'totals' => array('uniquePageviews' => $totalVisits),
+        return [
+            'totals' => ['uniquePageviews' => $totalVisits],
             'rows' => $allBrowser
-        );
+        ];
     }
 
 }

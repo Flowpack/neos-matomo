@@ -1,6 +1,6 @@
 # A Piwik tracking code object
 #
-prototype(Portachtzig.Neos.Piwik:TrackingCode) < prototype(TYPO3.TypoScript:Template) {
+prototype(Portachtzig.Neos.Piwik:TrackingCode) < prototype(Neos.Fusion:Template) {
 	templatePath = 'resource://Portachtzig.Neos.Piwik/Private/Templates/Prototypes/TrackingCode.html'
 	settings = ${Configuration.setting('Portachtzig.Neos.Piwik')}
 
