@@ -4,7 +4,7 @@
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u="//{settings.host}/";
+    var u="{settings.protocol}://{settings.host}/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', {settings.idSite}]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
@@ -12,6 +12,6 @@
   })();
 
 </script>
-<noscript><p><img src="//{settings.host}/piwik.php?idsite={settings.idSite}" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="{settings.protocol}://{settings.host}/piwik.php?idsite={settings.idSite}" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->
 
