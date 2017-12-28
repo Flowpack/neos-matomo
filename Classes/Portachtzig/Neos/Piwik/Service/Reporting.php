@@ -21,7 +21,9 @@ use Portachtzig\Neos\Piwik\Domain\Dto\OutlinkDataResult;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
+use Neos\Flow\Http\Client\CurlEngineException;
 use Neos\Flow\Http\Client\Browser;
+use Neos\Flow\Http\Response;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Neos\Service\Controller\AbstractServiceController;
 
@@ -56,6 +58,12 @@ class Reporting extends AbstractServiceController
     protected $browser;
 
     /**
+     * @Flow\Inject
+     * @var SystemLoggerInterface
+     */
+    protected $systemLogger;
+
+    /**
      * Call the Piwik Reporting API
      * @todo make this protected for security !!!
      * @param $piwikMethod string the method that should be called e.g. 'SitesManager.getAllSites'
@@ -74,8 +82,8 @@ class Reporting extends AbstractServiceController
             // @todo force https here or throw error ?
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json&' . $params;
             $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
-            $this->browser->setRequestEngine($this->browserRequestEngine);
-            $response = $this->browser->request($apiCallUrl);
+
+            $response = $this->request($apiCallUrl);
 
             return json_decode($response->getContent(), TRUE);
         }
@@ -108,39 +116,38 @@ class Reporting extends AbstractServiceController
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
             $apiCallUrl .= '&pageUrl=' . $pageUrl;
             $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
-            $this->browser->setRequestEngine($this->browserRequestEngine);
 
             if ($arguments['view'] == 'TimeSeriesView') {
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new TimeSeriesDataResult($response);
             }
             if ($arguments['view'] == 'ColumnView') {
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new ColumnDataResult($response);
             }
             if ($arguments['type'] == 'device') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new DeviceDataResult($response);
             }
             if ($arguments['type'] == 'osFamilies') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new OperatingSystemDataResult($response);
             }
             if ($arguments['type'] == 'browsers') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new BrowserDataResult($response);
             }
             if ($arguments['type'] == 'outlinks') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new OutlinkDataResult($response);
             }
@@ -169,4 +176,18 @@ class Reporting extends AbstractServiceController
 
         return $nodeUri;
     }
+
+    protected function request($url) {
+      //@TODO move this to constructor
+      $this->browserRequestEngine->setOption(CURLOPT_CONNECTTIMEOUT, 10);
+      $this->browser->setRequestEngine($this->browserRequestEngine);
+
+      try {
+         return $this->browser->request($apiCallUrl);
+      } catch (CurlEngineException $err) {
+         $this->systemLogger->log($err->getMessage(), LOG_WARN);
+      }
+
+      return null;
+   }
 }
