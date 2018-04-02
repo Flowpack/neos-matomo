@@ -8,8 +8,8 @@
         "ext-curl": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Portachtzig\\Neos\\Piwik": "Classes"
+        "psr-4": {
+            "Portachtzig\\Neos\\Piwik\\": "Classes"
         }
     },
     "extra": {
