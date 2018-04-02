@@ -61,6 +61,14 @@ After the connection has been established, the form will provide you with a site
 
 Additionally you will be able to edit basic settings of all your Piwik sites.
 
+## Additional features
+
+### Tracking Opt-Out content element
+
+This package provides a small configurable iframe content element for Neos which allows users
+to manually opt out of the tracking if "Do-Not-Track" is not enabled in their browser.
+The content of the iframe is loaded from the configured tracking host.
+
 ## License
 Portachtzig Neos Piwik Package is released under the GPL v3 (or later) license.
 

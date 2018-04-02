@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Portachtzig.Neos.Piwik" source-language="en" datatype="plaintext" target-language="de">
+        <body>
+            <trans-unit id="ui.label" xml:space="preserve">
+                <source>Tracking Opt-Out</source>
+                <target>Tracking Opt-Out</target>
+            </trans-unit>
+            <trans-unit id="groups.options" xml:space="preserve">
+                <source>Options</source>
+                <target>Optionen</target>
+            </trans-unit>
+            <trans-unit id="groups.iframe" xml:space="preserve">
+                <source>Inline frame settings</source>
+                <target>Frame Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="properties.border" xml:space="preserve">
+                <source>Border</source>
+                <target>Kante</target>
+            </trans-unit>
+            <trans-unit id="properties.width" xml:space="preserve">
+                <source>Width</source>
+                <target>Breite</target>
+            </trans-unit>
+            <trans-unit id="properties.height" xml:space="preserve">
+                <source>Height</source>
+                <target>Höhe</target>
+            </trans-unit>
+            <trans-unit id="properties.language" xml:space="preserve">
+                <source>Language</source>
+                <target>Sprache</target>
+            </trans-unit>
+            <trans-unit id="properties.backgroundColor" xml:space="preserve">
+                <source>Background color</source>
+                <target>Hintergrundfarbe</target>
+            </trans-unit>
+            <trans-unit id="properties.fontColor" xml:space="preserve">
+                <source>Font color</source>
+                <target>Schriftfarbe</target>
+            </trans-unit>
+            <trans-unit id="properties.fontSize" xml:space="preserve">
+                <source>Font size</source>
+                <target>Schriftgröße</target>
+            </trans-unit>
+            <trans-unit id="properties.fontFamily" xml:space="preserve">
+                <source>Font family</source>
+                <target>Schriftart</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

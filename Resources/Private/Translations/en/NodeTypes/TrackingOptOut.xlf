@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Portachtzig.Neos.Piwik" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="ui.label" xml:space="preserve">
+                <source>Tracking Opt-Out</source>
+            </trans-unit>
+            <trans-unit id="groups.options" xml:space="preserve">
+                <source>Options</source>
+            </trans-unit>
+            <trans-unit id="groups.iframe" xml:space="preserve">
+                <source>Inline frame settings</source>
+            </trans-unit>
+            <trans-unit id="properties.border" xml:space="preserve">
+                <source>Border</source>
+            </trans-unit>
+            <trans-unit id="properties.width" xml:space="preserve">
+                <source>Width</source>
+            </trans-unit>
+            <trans-unit id="properties.height" xml:space="preserve">
+                <source>Height</source>
+            </trans-unit>
+            <trans-unit id="properties.language" xml:space="preserve">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="properties.backgroundColor" xml:space="preserve">
+                <source>Background color</source>
+            </trans-unit>
+            <trans-unit id="properties.fontColor" xml:space="preserve">
+                <source>Font color</source>
+            </trans-unit>
+            <trans-unit id="properties.fontSize" xml:space="preserve">
+                <source>Font size</source>
+            </trans-unit>
+            <trans-unit id="properties.fontFamily" xml:space="preserve">
+                <source>Font family</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

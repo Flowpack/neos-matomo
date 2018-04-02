@@ -1,0 +1,30 @@
+prototype(Portachtzig.Neos.Piwik:TrackingOptOut) < prototype(Neos.Neos:ContentComponent) {
+    renderer = Neos.Fusion:Tag {
+        attributes.class = 'portachtzig-neos-piwik-tracking-opt-out'
+
+        content = Neos.Fusion:Tag {
+            tagName = 'iframe'
+            attributes {
+                style = Neos.Fusion:Array {
+                    border = ${'border: ' + q(node).property('border') + ';'}
+                    height = ${'height: ' + q(node).property('height') + ';'}
+                    width = ${'width: ' + q(node).property('width') + ';'}
+                }
+                src = Neos.Fusion:Array {
+                    trackingUrl = ${Configuration.setting('Portachtzig.Neos.Piwik.protocol') + '://' + Configuration.setting('Portachtzig.Neos.Piwik.host') + '?'}
+                    parameters = Neos.Fusion:RawArray {
+                        module = 'module=CoreAdminHome'
+                        action = 'action=optOut'
+                        language = ${'language=' + String.rawUrlEncode(q(node).property('language'))}
+                        backgroundColor = ${'backgroundColor=' + String.rawUrlEncode(q(node).property('backgroundColor'))}
+                        fontColor = ${'fontColor=' + String.rawUrlEncode(q(node).property('fontColor'))}
+                        fontSize = ${'fontSize=' + String.rawUrlEncode(q(node).property('fontSize'))}
+                        fontFamily = ${'fontFamily=' + String.rawUrlEncode(q(node).property('fontFamily'))}
+                        @process.join = ${Array.join(value, '&')}
+                    }
+                }
+            }
+            @if.hasTrackingUrl = ${!String.isBlank(Configuration.setting('Portachtzig.Neos.Piwik.host'))}
+        }
+    }
+}

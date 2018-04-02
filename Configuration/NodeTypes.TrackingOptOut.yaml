@@ -1,0 +1,85 @@
+'Portachtzig.Neos.Piwik:TrackingOptOut':
+  superTypes:
+    'Neos.Neos:Content': true
+  ui:
+    label: i18n
+    icon: 'icon-sign-out'
+    inspector:
+      groups:
+        options:
+          label: i18n
+          icon: 'icon-gears'
+        iframe:
+          label: i18n
+          icon: 'icon-square-o'
+  properties:
+    border:
+      type: string
+      defaultValue: '0'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'iframe'
+    width:
+      type: string
+      defaultValue: '100%'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'iframe'
+      validation:
+        Neos.Neos/Validation/NotEmptyValidator: {}
+    height:
+      type: string
+      defaultValue: '200px'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'iframe'
+      validation:
+        Neos.Neos/Validation/NotEmptyValidator: {}
+    language:
+      type: string
+      defaultValue: 'en'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'options'
+      validation:
+        Neos.Neos/Validation/NotEmptyValidator: {}
+    backgroundColor:
+      type: string
+      defaultValue: 'ffffff'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'options'
+    fontColor:
+      type: string
+      defaultValue: '000000'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'options'
+    fontSize:
+      type: string
+      defaultValue: '16px'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'options'
+    fontFamily:
+      type: string
+      defaultValue: 'arial'
+      ui:
+        label: i18n
+        reloadIfChanged: true
+        inspector:
+          group: 'options'
