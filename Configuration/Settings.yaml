@@ -5,6 +5,7 @@ Flowpack:
       protocol: https
       token_auth: ''
       idSite: ''
+      apiTimeout: 10
 
 Neos:
   Neos:

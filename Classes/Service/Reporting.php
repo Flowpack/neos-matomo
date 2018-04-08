@@ -19,15 +19,18 @@ use Flowpack\Neos\Matomo\Domain\Dto\OperatingSystemDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Http\Response;
+use Neos\Flow\Http\Uri;
 use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Neos\Service\Controller\AbstractServiceController;
 
-
-// @todo add exceptions
-
+/**
+ * Class Reporting
+ * @package Flowpack\Neos\Matomo\Service
+ */
 class Reporting extends AbstractServiceController
 {
 
@@ -57,39 +60,39 @@ class Reporting extends AbstractServiceController
 
     /**
      * Call the Matomo Reporting API
-     * @todo make this protected for security !!!
-     * @param $matomoMethod string the method that should be called e.g. 'SitesManager.getAllSites'
+     *
+     * @param $methodName string the method that should be called e.g. 'SitesManager.getAllSites'
      * @param $arguments array that contains the httpRequest arguments for the apiCall
      * @return array
      */
-    public function callAPI($matomoMethod, $arguments = array())
+    public function callAPI($methodName, $arguments = [])
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
-            $params = 'method=' . $matomoMethod;
+            $params = 'method=' . $methodName;
             foreach ($arguments as $key => $value) {
                 if ($value != '') {
                     $params .= '&' . $key . '=' . rawurlencode($value);
                 }
             }
-            // @todo force https here or throw error ?
+
             $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json&' . $params;
             $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
-            $this->browser->setRequestEngine($this->browserRequestEngine);
-            $response = $this->browser->request($apiCallUrl);
+            $response = $this->request($apiCallUrl);
 
             return json_decode($response->getContent(), TRUE);
         }
+        return [];
     }
 
     /**
      * Call the Matomo Reporting API for node specific statistics
-     * @todo make this protected for security !!!
+     *
      * @param $node NodeInterface
      * @param $controllerContext ControllerContext
      * @param $arguments array
      * @return AbstractDataResult
      */
-    public function getNodeStatistics($node = NULL, $controllerContext = NULL, $arguments = array())
+    public function getNodeStatistics($node = NULL, $controllerContext = NULL, $arguments = [])
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             $params = '';
@@ -101,50 +104,55 @@ class Reporting extends AbstractServiceController
 
             try {
                 $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
-            } catch (StatisticsNotAvailableException $err) {
+            } catch (\Exception $e) {
+                $this->systemLogger->log($e->getMessage(), LOG_WARNING);
                 return null;
             }
 
-            $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json' . $params;
-            $apiCallUrl .= '&pageUrl=' . $pageUrl;
-            $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
-            $this->browser->setRequestEngine($this->browserRequestEngine);
+            $apiCallUrl = join('', [
+                $this->settings['protocol'] . '://' . $this->settings['host'],
+                '/index.php?module=API&format=json' . $params,
+                '&pageUrl=' . $pageUrl,
+                '&idSite=' . $this->settings['idSite'],
+                '&token_auth=' . $this->settings['token_auth']
+            ]);
 
             if ($arguments['view'] == 'TimeSeriesView') {
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new TimeSeriesDataResult($response);
             }
             if ($arguments['view'] == 'ColumnView') {
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new ColumnDataResult($response);
             }
             if ($arguments['type'] == 'device') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new DeviceDataResult($response);
             }
             if ($arguments['type'] == 'osFamilies') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new OperatingSystemDataResult($response);
             }
             if ($arguments['type'] == 'browsers') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new BrowserDataResult($response);
             }
             if ($arguments['type'] == 'outlinks') {
                 $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->browser->request($apiCallUrl);
+                $response = $this->request($apiCallUrl);
 
                 return new OutlinkDataResult($response);
             }
         }
+        return null;
     }
 
     /**
@@ -152,8 +160,9 @@ class Reporting extends AbstractServiceController
      *
      * @param NodeInterface $node
      * @param ControllerContext $controllerContext
-     * @return \Neos\Flow\Http\Uri
+     * @return Uri
      * @throws StatisticsNotAvailableException If the node was not yet published and no live workspace URI can be resolved
+     * @throws \Exception
      */
     protected function getLiveNodeUri(NodeInterface $node, ControllerContext $controllerContext)
     {
@@ -165,8 +174,28 @@ class Reporting extends AbstractServiceController
             throw new StatisticsNotAvailableException('Matomo Statistics are only available on a published node', 1445812693);
         }
         $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, NULL, 'html', TRUE);
-        $nodeUri = new \Neos\Flow\Http\Uri($nodeUriString);
+        $nodeUri = new Uri($nodeUriString);
 
         return $nodeUri;
+    }
+
+
+    /**
+     * Send a request via curl to the api endpoint and returns the response
+     *
+     * @param string $apiCallUrl
+     * @return Response
+     */
+    protected function request($apiCallUrl)
+    {
+        $this->browserRequestEngine->setOption(CURLOPT_CONNECTTIMEOUT, $this->settings['apiTimeout']);
+        $this->browser->setRequestEngine($this->browserRequestEngine);
+
+        try {
+            return $this->browser->request($apiCallUrl);
+        } catch (\Exception $e) {
+            $this->systemLogger->log($e->getMessage(), LOG_WARNING);
+        }
+        return null;
     }
 }
