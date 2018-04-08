@@ -1,23 +1,23 @@
 <?php
 
-namespace Portachtzig\Neos\Piwik\Service;
+namespace Flowpack\Neos\Matomo\Service;
 
 /*
- * This script belongs to the Neos CMS package "Portachtzig.Neos.Piwik".
+ * This script belongs to the Neos CMS package "Flowpack.Neos.Matomo".
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
  * source code.
  */
 
-use Portachtzig\Neos\Piwik\Domain\Dto\AbstractDataResult;
-use Portachtzig\Neos\Piwik\Exception\StatisticsNotAvailableException;
-use Portachtzig\Neos\Piwik\Domain\Dto\TimeSeriesDataResult;
-use Portachtzig\Neos\Piwik\Domain\Dto\ColumnDataResult;
-use Portachtzig\Neos\Piwik\Domain\Dto\DeviceDataResult;
-use Portachtzig\Neos\Piwik\Domain\Dto\OperatingSystemDataResult;
-use Portachtzig\Neos\Piwik\Domain\Dto\BrowserDataResult;
-use Portachtzig\Neos\Piwik\Domain\Dto\OutlinkDataResult;
+use Flowpack\Neos\Matomo\Exception\StatisticsNotAvailableException;
+use Flowpack\Neos\Matomo\Domain\Dto\AbstractDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\TimeSeriesDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\ColumnDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\DeviceDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\OperatingSystemDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
@@ -56,16 +56,16 @@ class Reporting extends AbstractServiceController
     protected $browser;
 
     /**
-     * Call the Piwik Reporting API
+     * Call the Matomo Reporting API
      * @todo make this protected for security !!!
-     * @param $piwikMethod string the method that should be called e.g. 'SitesManager.getAllSites'
+     * @param $matomoMethod string the method that should be called e.g. 'SitesManager.getAllSites'
      * @param $arguments array that contains the httpRequest arguments for the apiCall
      * @return array
      */
-    public function callAPI($piwikMethod, $arguments = array())
+    public function callAPI($matomoMethod, $arguments = array())
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
-            $params = 'method=' . $piwikMethod;
+            $params = 'method=' . $matomoMethod;
             foreach ($arguments as $key => $value) {
                 if ($value != '') {
                     $params .= '&' . $key . '=' . rawurlencode($value);
@@ -82,7 +82,7 @@ class Reporting extends AbstractServiceController
     }
 
     /**
-     * Call the Piwik Reporting API for node specific statistics
+     * Call the Matomo Reporting API for node specific statistics
      * @todo make this protected for security !!!
      * @param $node NodeInterface
      * @param $controllerContext ControllerContext
@@ -162,7 +162,7 @@ class Reporting extends AbstractServiceController
         $liveContext = $this->contextFactory->create($contextProperties);
         $liveNode = $liveContext->getNodeByIdentifier($node->getIdentifier());
         if ($liveNode === NULL) {
-            throw new StatisticsNotAvailableException('Piwik Statistics are only available on a published node', 1445812693);
+            throw new StatisticsNotAvailableException('Matomo Statistics are only available on a published node', 1445812693);
         }
         $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, NULL, 'html', TRUE);
         $nodeUri = new \Neos\Flow\Http\Uri($nodeUriString);

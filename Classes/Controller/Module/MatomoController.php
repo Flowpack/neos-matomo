@@ -1,8 +1,8 @@
 <?php
-namespace Portachtzig\Neos\Piwik\Controller\Module;
+namespace Flowpack\Neos\Matomo\Controller\Module;
 
 /*
- * This script belongs to the Neos CMS package "Portachtzig.Neos.Piwik".
+ * This script belongs to the Neos CMS package "Flowpack.Neos.Matomo".
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -19,11 +19,11 @@ use Neos\Utility\Arrays;
 use Neos\Neos\Controller\Module\AbstractModuleController;
 
 /**
- * Piwik Site Management Module Controller
+ * Matomo Site Management Module Controller
  *
- * @package Portachtzig\Neos\Piwik\Controller\Module\Management
+ * @package Flowpack\Neos\Matomo\Controller\Module\Management
  */
-class PiwikController extends AbstractModuleController
+class MatomoController extends AbstractModuleController
 {
 
     /**
@@ -46,13 +46,13 @@ class PiwikController extends AbstractModuleController
 
     /**
      * @Flow\Inject
-     * @var \Portachtzig\Neos\Piwik\Service\Reporting
+     * @var \Flowpack\Neos\Matomo\Service\Reporting
      */
     protected $reportingService;
 
     /**
-     * An edit view for the global Piwik settings and
-     * Management Module for Piwik Sites through Piwik API
+     * An edit view for the global Matomo settings and
+     * Management Module for Matomo Sites through Matomo API
      *
      * @return void
      */
@@ -60,18 +60,18 @@ class PiwikController extends AbstractModuleController
     {
         try {
             // @todo persist host information to avoid calling this
-            $piwikHost = array(
+            $matomoHost = array(
                 'ip' => $this->reportingService->callAPI('API.getIpFromHeader'),
-                'version' => $this->reportingService->callAPI('API.getPiwikVersion'),
+                'version' => $this->reportingService->callAPI('API.getMatomoVersion'),
                 'sites' => $this->reportingService->callAPI('SitesManager.getAllSites'),
                 'headerLogo' => $this->reportingService->callAPI('API.getHeaderLogoUrl'),
             );
 
-            if ($piwikHost['sites'] !== null && array_key_exists('result', $piwikHost['sites']) && $piwikHost['sites']['result'] === 'error') {
-                $this->addFlashMessage($piwikHost['sites']['message'], 'Piwik Error', Message::SEVERITY_ERROR);
-                $this->view->assign('piwikError', true);
+            if ($matomoHost['sites'] !== null && array_key_exists('result', $matomoHost['sites']) && $matomoHost['sites']['result'] === 'error') {
+                $this->addFlashMessage($matomoHost['sites']['message'], 'Matomo Error', Message::SEVERITY_ERROR);
+                $this->view->assign('matomoError', true);
             } else {
-                $this->view->assign('piwikHost', $piwikHost);
+                $this->view->assign('matomoHost', $matomoHost);
             }
         } catch (CurlEngineException $curlError) {
             $this->addFlashMessage($curlError->getMessage(), 'cURL error: ' . $curlError->getReferenceCode(), Message::SEVERITY_ERROR);
@@ -79,21 +79,21 @@ class PiwikController extends AbstractModuleController
     }
 
     /**
-     * Update global Piwik settings
+     * Update global Matomo settings
      *
-     * @param array $piwik
+     * @param array $matomo
      * @return void
      */
-    public function updateAction(array $piwik)
+    public function updateAction(array $matomo)
     {
-        $configurationPath = $this->packageManager->getPackage('Portachtzig.Neos.Piwik')->getConfigurationPath();
+        $configurationPath = $this->packageManager->getPackage('Flowpack.Neos.Matomo')->getConfigurationPath();
         $settings = $this->configurationSource->load($configurationPath . ConfigurationManager::CONFIGURATION_TYPE_SETTINGS);
-        $piwik['host'] = preg_replace("(^https?://)", "", $piwik['host']);
-        $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.host', $piwik['host']);
-        $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.protocol', $piwik['protocol']);
-        $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.token_auth', $piwik['token_auth']);
-        if (array_key_exists('idSite', $piwik)) {
-            $settings = Arrays::setValueByPath($settings, 'Portachtzig.Neos.Piwik.idSite', $piwik['idSite']);
+        $matomo['host'] = preg_replace("(^https?://)", "", $matomo['host']);
+        $settings = Arrays::setValueByPath($settings, 'Flowpack.Neos.Matomo.host', $matomo['host']);
+        $settings = Arrays::setValueByPath($settings, 'Flowpack.Neos.Matomo.protocol', $matomo['protocol']);
+        $settings = Arrays::setValueByPath($settings, 'Flowpack.Neos.Matomo.token_auth', $matomo['token_auth']);
+        if (array_key_exists('idSite', $matomo)) {
+            $settings = Arrays::setValueByPath($settings, 'Flowpack.Neos.Matomo.idSite', $matomo['idSite']);
         }
         $this->configurationSource->save($configurationPath . ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $settings);
         $this->configurationManager->flushConfigurationCache();
@@ -101,27 +101,27 @@ class PiwikController extends AbstractModuleController
     }
 
     /**
-     * An edit view for a Piwik Site and its settings
+     * An edit view for a Matomo Site and its settings
      *
-     * @param array $piwikSite Site to be edited
+     * @param array $matomoSite Site to be edited
      * @return void
      */
-    public function editSiteAction(array $piwikSite)
+    public function editSiteAction(array $matomoSite)
     {
-        $this->view->assign('piwikSite', $piwikSite);
+        $this->view->assign('matomoSite', $matomoSite);
         $this->view->assign('clientIP', $this->request->getParentRequest()->getParentRequest()->getClientIpAddress());
         $this->view->assign('currentTime', new \DateTime());
     }
 
     /**
-     * Update a Piwik Site through the Piwik API
+     * Update a Matomo Site through the Matomo API
      *
-     * @param array $piwikSite Site to be updated
+     * @param array $matomoSite Site to be updated
      * @return void
      */
-    public function updateSiteAction(array $piwikSite)
+    public function updateSiteAction(array $matomoSite)
     {
-        $this->reportingService->callAPI('SitesManager.updateSite', $piwikSite);
+        $this->reportingService->callAPI('SitesManager.updateSite', $matomoSite);
         $this->redirect('index');
     }
 

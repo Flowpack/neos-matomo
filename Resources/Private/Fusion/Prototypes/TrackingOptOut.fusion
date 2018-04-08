@@ -1,6 +1,6 @@
-prototype(Portachtzig.Neos.Piwik:TrackingOptOut) < prototype(Neos.Neos:ContentComponent) {
+prototype(Flowpack.Neos.Matomo:TrackingOptOut) < prototype(Neos.Neos:ContentComponent) {
     renderer = Neos.Fusion:Tag {
-        attributes.class = 'portachtzig-neos-piwik-tracking-opt-out'
+        attributes.class = 'flowpack-neos-matomo-tracking-opt-out'
 
         content = Neos.Fusion:Tag {
             tagName = 'iframe'
@@ -11,7 +11,7 @@ prototype(Portachtzig.Neos.Piwik:TrackingOptOut) < prototype(Neos.Neos:ContentCo
                     width = ${'width: ' + q(node).property('width') + ';'}
                 }
                 src = Neos.Fusion:Array {
-                    trackingUrl = ${Configuration.setting('Portachtzig.Neos.Piwik.protocol') + '://' + Configuration.setting('Portachtzig.Neos.Piwik.host') + '?'}
+                    trackingUrl = ${Configuration.setting('Flowpack.Neos.Matomo.protocol') + '://' + Configuration.setting('Flowpack.Neos.Matomo.host') + '?'}
                     parameters = Neos.Fusion:RawArray {
                         module = 'module=CoreAdminHome'
                         action = 'action=optOut'
@@ -24,7 +24,7 @@ prototype(Portachtzig.Neos.Piwik:TrackingOptOut) < prototype(Neos.Neos:ContentCo
                     }
                 }
             }
-            @if.hasTrackingUrl = ${!String.isBlank(Configuration.setting('Portachtzig.Neos.Piwik.host'))}
+            @if.hasTrackingUrl = ${!String.isBlank(Configuration.setting('Flowpack.Neos.Matomo.host'))}
         }
     }
 }

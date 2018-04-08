@@ -1,0 +1,12 @@
+<f:layout name="Default" />
+
+<f:section name="Title">
+	<h2>Edit Matomo Site</h2>
+</f:section>
+
+<f:section name="Content">
+
+	<f:form action="updateSite" name="matomoSite" object="{matomoSite}">
+		<f:render partial="Module/SiteForm" arguments="{matomoSite : matomoSite, clientIP : clientIP, currentTime : currentTime}" />
+	</f:form>
+</f:section>

@@ -1,9 +1,9 @@
 <f:layout name="Default" />
 
 <f:section name="Title">
-	<img src="{piwikHost.headerLogo.value}" alt="Piwik Logo">
+	<img src="{matomoHost.headerLogo.value}" alt="Matomo Logo">
 	<br><br>
-	<h1>Piwik Host Information</h1>
+	<h1>Matomo Host Information</h1>
 	<br>
 </f:section>
 <f:section name="Content">
@@ -15,19 +15,19 @@
 				<tr>
 					<th>IP Address:</th>
 					<td>
-						<f:for each="{piwikHost.ip}" as="ip">
+						<f:for each="{matomoHost.ip}" as="ip">
 							{ip}<br>
 						</f:for>
 					</td>
 				</tr>
 				<tr>
 					<th>Version:</th>
-					<td>{piwikHost.version.value}</td>
+					<td>{matomoHost.version.value}</td>
 				</tr>
 			</table>
 		</div>
 	</div>
-	<f:form action="update" name="piwik" object="{settings}">
+	<f:form action="update" name="matomo" object="{settings}">
 		<fieldset>
 			<div class="neos-row-fluid">
 				<fieldset class="neos-span4">
@@ -64,7 +64,7 @@
 							</div>
 							<div class="neos-subheader">
 								<p>
-									 Be aware that using <b>HTTP</b> for communication with your Piwik host
+									 Be aware that using <b>HTTP</b> for communication with your Matomo host
 									<b>{settings.host}</b> will result in your super user's auth_token being transmitted as an unencrypted URL parameter!
 									<br>
 									<br>
@@ -90,13 +90,13 @@
 						</p>
 					</div>
 					<f:if condition="{settings.token_auth}">
-						<f:if condition="{piwikError} != 1">
+						<f:if condition="{matomoError} != 1">
 							<div class="neos-control-group">
 								<br>
-								<label class="neos-control-label" for="idSite">Piwik Site to use for this Neos installation:</label>
+								<label class="neos-control-label" for="idSite">Matomo Site to use for this Neos installation:</label>
 								<div class="neos-controls">
-									<select name="moduleArguments[piwik][idSite]" id="idSite" class="neos-span12" >
-										<f:for each="{piwikHost.sites}" as="site">
+									<select name="moduleArguments[matomo][idSite]" id="idSite" class="neos-span12" >
+										<f:for each="{matomoHost.sites}" as="site">
 											<option value="{site.idsite}"
 													{f:if(condition:'{settings.idSite} == {site.idsite}',then:'selected="selected"')}>
 											{site.name}</option>
@@ -119,14 +119,14 @@
 						</tr>
 						</thead>
 						<tbody>
-						<f:for each="{piwikHost.sites}" as="site" key="number">
+						<f:for each="{matomoHost.sites}" as="site" key="number">
 							<tr>
 								<td>{site.idsite}</td>
 								<td>{site.name}</td>
 								<td>{site.main_url}</td>
 								<td class="neos-action">
 									<div class="neos-pull-right">
-										<f:link.action action="editSite" arguments="{piwikSite: site}" class="neos-button neos-button-primary" title="Click to edit">
+										<f:link.action action="editSite" arguments="{matomoSite: site}" class="neos-button neos-button-primary" title="Click to edit">
 											<i class="icon-pencil icon-white"></i>
 										</f:link.action>
 									</div>
@@ -139,7 +139,7 @@
 			</div>
 
 			<div class="neos-footer">
-				<f:form.submit value="Update Piwik Host" class="neos-button neos-button-primary" />
+				<f:form.submit value="Update Matomo Host" class="neos-button neos-button-primary" />
 			</div>
 		</fieldset>
 	</f:form>

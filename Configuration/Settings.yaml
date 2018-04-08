@@ -1,32 +1,32 @@
-
-Portachtzig:
+Flowpack:
   Neos:
-    Piwik:
+    Matomo:
       host: ''
       protocol: https
       token_auth: ''
       idSite: ''
+
 Neos:
   Neos:
     userInterface:
       translation:
         autoInclude:
-          Portachtzig.Neos.Piwik:
+          Flowpack.Neos.Matomo:
             - 'NodeTypes/*'
     modules:
       seo:
         label: SEO
         icon: icon-rocket
         submodules:
-          piwik:
-            label: Piwik
-            controller: \Portachtzig\Neos\Piwik\Controller\Module\PiwikController
-            description: 'Configure Piwik for your Domains'
+          matomo:
+            label: Matomo
+            controller: \Flowpack\Neos\Matomo\Controller\Module\MatomoController
+            description: 'Configure Matomo for your Domains'
             icon: icon-bar-chart
             actions:
               index:
-                label: 'Configure piwik'
-                title: 'Configure piwik'
+                label: 'Configure Matomo'
+                title: 'Configure Matomo'
     fusion:
       autoInclude:
-        Portachtzig.Neos.Piwik: true
+        FLowpack.Neos.Matomo: true

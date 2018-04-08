@@ -1,9 +1,8 @@
 <?php
-
-namespace Portachtzig\Neos\Piwik\Domain\Dto;
+namespace Flowpack\Neos\Matomo\Domain\Dto;
 
 /*
- * This script belongs to the Neos CMS package "Portachtzig.Neos.Piwik".
+ * This script belongs to the Neos CMS package "Flowpack.Neos.Matomo".
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -16,7 +15,7 @@ abstract class AbstractDataResult implements \JsonSerializable
 {
 
     /**
-     * The response from Piwik containing serialized json data
+     * The response from Matomo containing serialized json data
      *
      * @var Response
      */

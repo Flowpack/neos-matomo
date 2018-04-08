@@ -1,10 +1,10 @@
 privilegeTargets:
   Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege:
-    Portachtzig_Neos_Piwik_Backend_Module:
-      matcher: method(Portachtzig\Neos\Piwik\Controller\Module\PiwikController->(index|update|editSite|updateSite)Action())
+    Flowpack_Neos_Matomo_Backend_Module:
+      matcher: method(Flowpack\Neos\Matomo\Controller\Module\MatomoController->(index|update|editSite|updateSite)Action())
 roles:
   'Neos.Neos:Administrator':
     privileges:
       -
-        privilegeTarget: Portachtzig_Neos_Piwik_Backend_Module
+        privilegeTarget: Flowpack_Neos_Matomo_Backend_Module
         permission: GRANT

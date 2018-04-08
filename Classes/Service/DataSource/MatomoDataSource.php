@@ -1,8 +1,8 @@
 <?php
-namespace Portachtzig\Neos\Piwik\Service\DataSource;
+namespace Flowpack\Neos\Matomo\Service\DataSource;
 
 /*
- * This script belongs to the Neos CMS package "Portachtzig.Neos.Piwik".
+ * This script belongs to the Neos CMS package "Flowpack.Neos.Matomo".
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -13,18 +13,18 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 
-class PiwikDataSource extends AbstractDataSource
+class MatomoDataSource extends AbstractDataSource
 {
     /**
      * @Flow\Inject
-     * @var \Portachtzig\Neos\Piwik\Service\Reporting
+     * @var \Flowpack\Neos\Matomo\Service\Reporting
      */
     protected $reportingService;
 
     /**
      * @var string
      */
-    static protected $identifier = 'portachtzig-neos-piwik';
+    static protected $identifier = 'flowpack-neos-matomo';
 
     /**
      * Get data
@@ -33,12 +33,11 @@ class PiwikDataSource extends AbstractDataSource
      */
     public function getData(NodeInterface $node = NULL, array $arguments)
     {
-        $piwikData = $this->reportingService->getNodeStatistics($node, $this->controllerContext, $arguments);
-        $data = array(
-            'data' => $piwikData
-        );
+        $data = $this->reportingService->getNodeStatistics($node, $this->controllerContext, $arguments);
 
-        return $data;
+        return [
+            'data' => $data
+        ];
     }
 
 }

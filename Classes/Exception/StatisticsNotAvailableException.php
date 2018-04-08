@@ -1,8 +1,8 @@
 <?php
-namespace Portachtzig\Neos\Piwik\Exception;
+namespace Flowpack\Neos\Matomo\Exception;
 
 /*
- * This script belongs to the Neos CMS package "Portachtzig.Neos.Piwik".
+ * This script belongs to the Neos CMS package "Flowpack.Neos.Matomo".
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -10,7 +10,7 @@ namespace Portachtzig\Neos\Piwik\Exception;
  */
 
 use Neos\Flow\Annotations as Flow;
-use Portachtzig\Neos\Piwik\Exception;
+use Flowpack\Neos\Matomo\Exception;
 
 /**
  * Analytics are not available (e.g. node is not yet published)

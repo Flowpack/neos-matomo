@@ -1,8 +1,8 @@
 # A Piwik tracking code object
 #
-prototype(Portachtzig.Neos.Piwik:TrackingCode) < prototype(Neos.Fusion:Template) {
-	templatePath = 'resource://Portachtzig.Neos.Piwik/Private/Templates/Prototypes/TrackingCode.html'
-	settings = ${Configuration.setting('Portachtzig.Neos.Piwik')}
+prototype(Flowpack.Neos.Matomo:TrackingCode) < prototype(Neos.Fusion:Template) {
+	templatePath = 'resource://Flowpack.Neos.Matomo/Private/Templates/Prototypes/TrackingCode.html'
+	settings = ${Configuration.setting('Flowpack.Neos.Matomo')}
 
 	// Show tracking code only in live workspace and if all necessary parameters are set
 	@if {

@@ -1,15 +1,15 @@
 <div class=" neos-module-container">
     <fieldset class="neos-row-fluid">
         <div class="neos-span12">
-            <legend>Piwik Site <b>{piwikSite.name}</b></legend>
-            <small>created on <i>{piwikSite.ts_created}</i></small>
+            <legend>Matomo Site <b>{matomoSite.name}</b></legend>
+            <small>created on <i>{matomoSite.ts_created}</i></small>
             <br>
             <br>
-            <f:form.hidden name="piwikSite[idSite]" value="{piwikSite.idSite}" />
-            <f:form.hidden name="piwikSite[type]" value="{type}" />
-            <f:form.hidden name="piwikSite[startDate]" value="{ts_created}" />
-            <f:form.hidden name="piwikSite[group]" value="{group}" />
-            <f:form.hidden name="piwikSite[excludedUserAgents]" value="{excluded_user_agents}" />
+            <f:form.hidden name="matomoSite[idSite]" value="{matomoSite.idSite}" />
+            <f:form.hidden name="matomoSite[type]" value="{type}" />
+            <f:form.hidden name="matomoSite[startDate]" value="{ts_created}" />
+            <f:form.hidden name="matomoSite[group]" value="{group}" />
+            <f:form.hidden name="matomoSite[excludedUserAgents]" value="{excluded_user_agents}" />
 
             <div class="neos-row-fluid">
                 <div class="neos-span12">
@@ -17,13 +17,13 @@
                         <div class="neos-span6">
                             <label class="neos-control-label" for="name">Name</label>
                             <div class="neos-controls">
-                                <f:form.textfield name="piwikSite[siteName]" value="{piwikSite.name}" id="name" class="neos-span12" />
+                                <f:form.textfield name="matomoSite[siteName]" value="{matomoSite.name}" id="name" class="neos-span12" />
                             </div>
                         </div>
                         <div class="neos-span6">
                             <label class="neos-control-label" for="main_url">Main URL</label>
                             <div class="neos-controls">
-                                <f:form.textfield name="piwikSite[urls]" value="{piwikSite.main_url}" id="main_url" class="neos-span12" />
+                                <f:form.textfield name="matomoSite[urls]" value="{matomoSite.main_url}" id="main_url" class="neos-span12" />
                             </div>
                         </div>
                     </div>
@@ -37,8 +37,8 @@
                         <div class="neos-span3">
                             <div class="neos-controls">
                                 <label class="neos-control-label neos-pull-left" for="keep_url_fragment">Page URL fragments</label>&nbsp;
-                                <f:form.radio name="piwikSite[keepURLFragments]" value="1" id="keep_url_fragment" checked="{piwikSite.keep_url_fragment} == 1" /> yes
-                                <f:form.radio name="piwikSite[keepURLFragments]" value="0" id="keep_url_fragment" checked="{piwikSite.keep_url_fragment} == 0" /> no
+                                <f:form.radio name="matomoSite[keepURLFragments]" value="1" id="keep_url_fragment" checked="{matomoSite.keep_url_fragment} == 1" /> yes
+                                <f:form.radio name="matomoSite[keepURLFragments]" value="0" id="keep_url_fragment" checked="{matomoSite.keep_url_fragment} == 0" /> no
 
                             </div>
                         </div>
@@ -57,12 +57,12 @@
                     <div class="neos-control-group neos-row-fluid">
                         <div class="neos-span6">
                             <label class="neos-control-label" for="excluded_ips">Excluded IPs</label>
-                            <f:form.textarea name="piwikSite[excludedIps]" value="{piwikSite.excluded_ips}" id="excluded_ips" class="neos-span12" rows="3" />
+                            <f:form.textarea name="matomoSite[excludedIps]" value="{matomoSite.excluded_ips}" id="excluded_ips" class="neos-span12" rows="3" />
                         </div>
                         <div class="neos-span6">
                             <p>
                                 <br>
-                                Enter the list of IPs, one per line, that you wish to exclude from being tracked by Piwik. You can use wildcards, eg. 1.2.3.* or 1.2.*.*
+                                Enter the list of IPs, one per line, that you wish to exclude from being tracked by Matomo. You can use wildcards, eg. 1.2.3.* or 1.2.*.*
                                 <br>
                                 <br>
                             </p>
@@ -80,7 +80,7 @@
                     <div class="neos-control-group neos-span6">
                         <label class="neos-control-label" for="excluded_parameters">Excluded Parameters</label>
                         <div class="neos-controls">
-                            <f:form.textarea name="piwikSite[excludedQueryParameters]" value="{piwikSite.excluded_parameters}" id="excluded_parameters" class="neos-span12" rows="3"/>
+                            <f:form.textarea name="matomoSite[excludedQueryParameters]" value="{matomoSite.excluded_parameters}" id="excluded_parameters" class="neos-span12" rows="3"/>
                         </div>
                     </div>
                     <div class="neos-span6">
@@ -89,7 +89,7 @@
                             Enter the list of URL Query Parameters, one per line, to exclude from the Page URLs reports.
                             <br>
                             <br>
-                            Piwik will automatically exclude the common session parameters (phpsessid, sessionid, ...).
+                            Matomo will automatically exclude the common session parameters (phpsessid, sessionid, ...).
                             <br>
                             <br>
                         </p>
@@ -106,13 +106,13 @@
                 <div class="neos-control-group neos-span2">
                     <div class="neos-controls">
                         <label class="neos-control-label neos-pull-left" for="siteSearch">Suche</label>&nbsp;
-                        <f:form.radio name="piwikSite[sitesearch]" value="1" id="sitesearch" checked="{piwikSite.sitesearch} == 1" /> yes
-                        <f:form.radio name="piwikSite[sitesearch]" value="0" id="sitesearch" checked="{piwikSite.sitesearch} == 0" /> no
+                        <f:form.radio name="matomoSite[sitesearch]" value="1" id="sitesearch" checked="{matomoSite.sitesearch} == 1" /> yes
+                        <f:form.radio name="matomoSite[sitesearch]" value="0" id="sitesearch" checked="{matomoSite.sitesearch} == 0" /> no
                     </div>
                 </div>
                 <div class="neos-span10">
                     <p>
-                        You can use Piwik to track and report what visitors are searching in your website's internal search engine.
+                        You can use Matomo to track and report what visitors are searching in your website's internal search engine.
                         <br>
                         <br>
                     </p>
@@ -128,7 +128,7 @@
                         <div class=" neos-span4">
                             <label class="neos-control-label" for="timezone">Time Zone</label>
                             <div class="neos-controls">
-                                <f:form.textfield name="piwikSite[timezone]" value="{piwikSite.timezone}" id="timezone" class="neos-span12" />
+                                <f:form.textfield name="matomoSite[timezone]" value="{matomoSite.timezone}" id="timezone" class="neos-span12" />
                             </div>
                         </div>
                         <div class="neos-span8">
@@ -150,7 +150,7 @@
                         <div class="neos-span4">
                             <label class="neos-control-label" for="currency">Currency</label>
                             <div class="neos-controls">
-                                <f:form.textfield name="piwikSite[currency]" value="{piwikSite.currency}" id="currency" class="neos-span12" />
+                                <f:form.textfield name="matomoSite[currency]" value="{matomoSite.currency}" id="currency" class="neos-span12" />
                             </div>
                         </div>
                         <div class="neos-span8">

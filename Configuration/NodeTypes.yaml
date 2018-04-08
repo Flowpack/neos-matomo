@@ -1,50 +1,50 @@
 #
-# Add the Piwik mixin to Neos.Neos:Document
+# Add the Matomo mixin to Neos.Neos:Document
 #
 
 'Neos.Neos:Document':
   superTypes:
-    'Portachtzig.Neos.Piwik:StatsTabMixin': true
+    'Flowpack.Neos.Matomo:StatsTabMixin': true
 
 'Neos.Neos:Shortcut':
   superTypes:
-    'Portachtzig.Neos.Piwik:StatsTabMixin': true
+    'Flowpack.Neos.Matomo:StatsTabMixin': true
 
-'Portachtzig.Neos.Piwik:StatsTabMixin':
+'Flowpack.Neos.Matomo:StatsTabMixin':
   abstract: true
   ui:
     inspector:
       tabs:
         stats:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:tabs.stats'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:tabs.stats'
           position: 100
           icon: icon-bar-chart
       groups:
         timebased:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.timebased'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:groups.timebased'
           position: 10
           tab: stats
         generalInfo:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.generalInfo'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:groups.generalInfo'
           position: 20
           tab: stats
         types:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.types'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:groups.types'
           position: 30
           tab: stats
         outlinks:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:groups.outlinks'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:groups.outlinks'
           position: 40
           tab: stats
       views:
         uniqueVisitsLastWeek:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisits'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.uniqueVisits'
           group: timebased
           position: 10
           view: Content/Inspector/Views/Data/TimeSeriesView
           viewOptions:
             subtitle: 'last week'
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: TimeSeriesView
               method: Actions.getPageUrl
@@ -57,13 +57,13 @@
             chart:
               selectedInterval: days
         uniqueVisitsLastMonth:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisits'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.uniqueVisits'
           group: timebased
           position: 20
           view: Content/Inspector/Views/Data/TimeSeriesView
           viewOptions:
             subtitle: 'last month'
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: TimeSeriesView
               method: Actions.getPageUrl
@@ -76,12 +76,12 @@
             chart:
               selectedInterval: weeks
         generalInfo:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.generalInfo'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.generalInfo'
           group: generalInfo
           position: 10
           view: Content/Inspector/Views/Data/ColumnView
           viewOptions:
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: ColumnView
               method: Actions.getPageUrl
@@ -95,12 +95,12 @@
                 data: totals.nb_hits
                 label: Hits
         uniqueVisitsByDeviceCategory:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByDeviceCategory'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.uniqueVisitsByDeviceCategory'
           group: types
           position: 10
           view: Content/Inspector/Views/Data/TableView
           viewOptions:
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: TableView
               method: DevicesDetection.getType
@@ -122,12 +122,12 @@
                 data: percent
                 suffix: '%'
         uniqueVisitsByOsFamiles:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByOsFamilies'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.uniqueVisitsByOsFamilies'
           group: types
           position: 20
           view: Content/Inspector/Views/Data/TableView
           viewOptions:
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: TableView
               method: DevicesDetection.getOsFamilies
@@ -151,12 +151,12 @@
                 data: percent
                 suffix: '%'
         uniqueVisitsByBrowsers:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByBrowsers'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.uniqueVisitsByBrowsers'
           group: types
           position: 30
           view: Content/Inspector/Views/Data/TableView
           viewOptions:
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: TableView
               method: DevicesDetection.getBrowsers
@@ -174,12 +174,12 @@
                 data: percent
                 suffix: '%'
         uniqueVisitsByOutlinks:
-          label: 'Portachtzig.Neos.Piwik:NodeTypes.StatsTabMixin:views.uniqueVisitsByOutlinks'
+          label: 'Flowpack.Neos.Matomo:NodeTypes.StatsTabMixin:views.uniqueVisitsByOutlinks'
           group: outlinks
           position: 10
           view: Content/Inspector/Views/Data/TableView
           viewOptions:
-            dataSource: portachtzig-neos-piwik
+            dataSource: flowpack-neos-matomo
             arguments:
               view: TableView
               method: Actions.getOutlinks

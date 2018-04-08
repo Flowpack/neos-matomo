@@ -1,4 +1,4 @@
-'Portachtzig.Neos.Piwik:TrackingOptOut':
+'Flowpack.Neos.Matomo:TrackingOptOut':
   superTypes:
     'Neos.Neos:Content': true
   ui:

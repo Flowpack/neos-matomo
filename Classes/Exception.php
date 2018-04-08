@@ -1,8 +1,8 @@
 <?php
-namespace Portachtzig\Neos\Piwik;
+namespace Flowpack\Neos\Matomo;
 
 /*
- * This script belongs to the Neos CMS package "Portachtzig.Neos.Piwik".
+ * This script belongs to the Neos CMS package "Flowpack.Neos.Matomo".
  *
  * This package is Open Source Software. For the full copyright and license
  * information, please view the LICENSE file which was distributed with this
@@ -10,7 +10,7 @@ namespace Portachtzig\Neos\Piwik;
  */
 
 /**
- * Base exception for GoogleAnalytics package
+ * Base exception for Matomo package
  */
 class Exception extends \Neos\Flow\Exception
 {
