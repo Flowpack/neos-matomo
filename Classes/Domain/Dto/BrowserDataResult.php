@@ -16,11 +16,10 @@ class BrowserDataResult extends AbstractDataResult
      */
     function jsonSerialize()
     {
-        $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
         $clientBrowser = [];
         $allBrowser = [];
-        foreach ($results as $year => $devices) {
+        foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
                     $totalVisits = $totalVisits + $device['nb_visits'];

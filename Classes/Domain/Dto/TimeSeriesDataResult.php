@@ -17,13 +17,12 @@ class TimeSeriesDataResult extends AbstractDataResult
      */
     function jsonSerialize()
     {
-        $results = json_decode($this->response->getContent(), true);
         $i = 0;
         $totalVisits = 0;
         $totalHits = 0;
         $rows = [];
 
-        foreach ($results as $key => $value) {
+        foreach ($this->results as $key => $value) {
             if (!empty($value) && is_array($value)) {
                 $rows[$i]['date'] = $key;
                 $rows[$i]['nb_visits'] = $value[0]['nb_visits'];

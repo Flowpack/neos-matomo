@@ -22,11 +22,24 @@ abstract class AbstractDataResult implements \JsonSerializable
     protected $response;
 
     /**
+     * The json decoded results
+     *
+     * @var array
+     */
+    protected $results;
+
+    /**
      * @param Response $response
      */
     public function __construct(Response $response)
     {
         $this->response = $response;
+
+        if ($response !== null) {
+            $this->results = json_decode($this->response->getContent(), true);
+        } else {
+            $this->results = [];
+        }
     }
 
     /**

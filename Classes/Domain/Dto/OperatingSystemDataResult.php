@@ -18,7 +18,6 @@ class OperatingSystemDataResult extends AbstractDataResult
      */
     function jsonSerialize()
     {
-        $results = json_decode($this->response->getContent(), true);
         $totalVisits = 0;
         $clientOperatingSystems = [
             'GNU/Linux' => 0,
@@ -28,7 +27,7 @@ class OperatingSystemDataResult extends AbstractDataResult
             'Android' => 0
         ];
 
-        foreach ($results as $year => $devices) {
+        foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
                     if ($device['label'] == 'GNU/Linux') {
