@@ -7,16 +7,16 @@
 <f:section name="Content">
     <br>
     <div class="neos-row-fluid">
-        <div class="neos-span4">
+        <div class="neos-span6">
             <h2>Configuration</h2>
             <br>
             <div class="neos-control-group">
-                <strong class="neos-control-label">Host:</strong>
+                <strong>Host:</strong>
                 {settings.host}
             </div>
 
             <div class="neos-control-group">
-                <strong class="neos-control-label">Protocol:</strong>
+                <strong>Protocol:</strong>
                 {settings.protocol}
                 <span data-toggle="modal" class="neos-inline neos-button neos-button-small"
                       href="#protocol-modal">?</span>
@@ -45,12 +45,12 @@
             </div>
 
             <div class="neos-control-group">
-                <strong class="neos-control-label">Token:</strong>
+                <strong>Token:</strong>
                 {settings.token_auth}
             </div>
         </div>
 
-        <div class="neos-span4 neos-pull-right">
+        <div class="neos-span6 neos-pull-right">
             <h2>Matomo Host Information</h2>
             <br>
             <div class="neos-control-group">
@@ -78,7 +78,7 @@
             </div>
 
             <div class="neos-control-group">
-                <strong class="neos-control-label">Sitename:</strong>
+                <strong>Sitename:</strong>
                 <f:if condition="{matomoHost.site.0}">
                     <f:then>
                         {matomoHost.site.0.name} <i class="icon icon-check-circle-o"></i>
