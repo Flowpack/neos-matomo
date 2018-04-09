@@ -57,6 +57,18 @@ Instead of requiring `portachtzig/neos-piwik` you should now require `flowpack/n
 Also if you use or override `Flowpack.Neos.Matomo:StatsTabMixin` you'll have to change the naming  
 in your own NodeType configurations to `Flowpack.Neos.Matomo:StatsTabMixin`. 
 
+In your configuration file you have to change the path
+
+    Portachtzig:
+      Neos:
+        Piwik:
+
+to
+    
+    Flowpack:
+      Neos:
+        Matomo:
+
 ## Configuration
 After the package has been installed, there will be an additional Backend Module in Neos, called "Matomo".
 Depending on your current FLOW_CONTEXT you might want to flush the cache.
