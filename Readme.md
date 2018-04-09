@@ -8,7 +8,7 @@
 This package integrates the `Matomo Open Analytics Platform` into Neos and is also compatible with older `Piwik` installations.
 
 **Features**
- + adds a Backend Module to your Neos instance which helps hooking up a Matomo host and selecting a site for tracking
+ + adds a Backend Module to your Neos instance which helps checking your configuration
  + adds a tab to the Property Inspector, which shows time, device, OS and browser related statistics collected by Matomo
  + adds a customizeable content element which allows visitors to opt-out of tracking in the frontend
 
@@ -73,11 +73,11 @@ to
 After the package has been installed, there will be an additional Backend Module in Neos, called "Matomo".
 Depending on your current FLOW_CONTEXT you might want to flush the cache.
 
-![matomo-logo](Documentation/Images/index.png)
+![matomo-logo](Documentation/Images/matomo-config.png)
 
-
-To connect Neos with your Matomo installation you just have to enter your hostname and token_auth in the Backend Module and select the site you created in Matomo to track your user's statistics.
-
+To connect Neos with your Matomo installation you just have to enter your hostname and token_auth in the 
+in your `Settings.yaml` to track your user's statistics.
+You can use the backend module then to verify your configuration.
 
 + **Host**
 You can skip the protocol prefix, because https is forced here, since the authentication token is an URL parameter.
@@ -101,15 +101,12 @@ The content of the iframe is loaded from the configured tracking host.
 You can adjust all settings that Matomo offers via their API.
 
 ## License
+
 Neos Matomo Package is released under the GPL v3 (or later) license.
 
 ## Screenshots 
 
-![site settings](Documentation/Images/site-settings.png)
-
-Matomo site settings in Neos
-
-![visist per day / last week](Documentation/Images/DemoPackage-matomo.png)
+![visist per day / last week](Documentation/Images/demo-package-matomo.png)
 
 Backend view with selected Matomo Panel in the Property Inspector
 
