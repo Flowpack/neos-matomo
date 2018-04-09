@@ -9,6 +9,7 @@ namespace Flowpack\Neos\Matomo\Controller\Module;
  * source code.
  */
 
+use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Configuration\Source\YamlSource;
@@ -51,6 +52,12 @@ class MatomoController extends AbstractModuleController
     protected $reportingService;
 
     /**
+     * @Flow\Inject
+     * @var VariableFrontend
+     */
+    protected $configurationCache;
+
+    /**
      * An edit view for the global Matomo settings and
      * Management Module for Matomo Sites through Matomo API
      *
@@ -60,19 +67,18 @@ class MatomoController extends AbstractModuleController
     {
         try {
             // @todo persist host information to avoid calling this
-            $matomoHost = array(
+            $matomoHost = [
                 'ip' => $this->reportingService->callAPI('API.getIpFromHeader'),
                 'version' => $this->reportingService->callAPI('API.getMatomoVersion'),
                 'sites' => $this->reportingService->callAPI('SitesManager.getAllSites'),
                 'headerLogo' => $this->reportingService->callAPI('API.getHeaderLogoUrl'),
-            );
+            ];
 
             if ($matomoHost['sites'] !== null && array_key_exists('result', $matomoHost['sites']) && $matomoHost['sites']['result'] === 'error') {
-                $this->addFlashMessage($matomoHost['sites']['message'], 'Matomo Error', Message::SEVERITY_ERROR);
-                $this->view->assign('matomoError', true);
-            } else {
-                $this->view->assign('matomoHost', $matomoHost);
+                $this->view->assign('matomoError', $matomoHost['sites']['message']);
+                $matomoHost['sites'] = [];
             }
+            $this->view->assign('matomoHost', $matomoHost);
         } catch (CurlEngineException $curlError) {
             $this->addFlashMessage($curlError->getMessage(), 'cURL error: ' . $curlError->getReferenceCode(), Message::SEVERITY_ERROR);
         }

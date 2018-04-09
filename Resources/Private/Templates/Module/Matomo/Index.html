@@ -1,13 +1,13 @@
 <f:layout name="Default" />
 
 <f:section name="Title">
-	<img src="{matomoHost.headerLogo.value}" alt="Matomo Logo">
+	<br>
+	<img src="{f:uri.resource(path: 'resource://Flowpack.Neos.Matomo/Public/Images/matomo-white.svg')}" alt="Matomo Logo">
 	<br><br>
 	<h1>Matomo Host Information</h1>
 	<br>
 </f:section>
 <f:section name="Content">
-	<f:flashMessages />
 	<div class="neos-row-fluid">
 		<div class="neos-span4">
 			<div class="neos-breadcrumb"></div>
@@ -90,51 +90,64 @@
 						</p>
 					</div>
 					<f:if condition="{settings.token_auth}">
-						<f:if condition="{matomoError} != 1">
-							<div class="neos-control-group">
-								<br>
-								<label class="neos-control-label" for="idSite">Matomo Site to use for this Neos installation:</label>
-								<div class="neos-controls">
-									<select name="moduleArguments[matomo][idSite]" id="idSite" class="neos-span12" >
-										<f:for each="{matomoHost.sites}" as="site">
-											<option value="{site.idsite}"
-													{f:if(condition:'{settings.idSite} == {site.idsite}',then:'selected="selected"')}>
-											{site.name}</option>
-										</f:for>
-									</select>
-								</div>
-							</div>
-						</f:if>
+						<div class="neos-control-group">
+							<br>
+							<label class="neos-control-label" for="idSite">Matomo Site to use for this Neos installation:</label>
+							<f:if condition="{matomoError}">
+								<f:then>
+									<i>{matomoError}</i>
+								</f:then>
+								<f:else>
+									<div class="neos-controls">
+										<select name="moduleArguments[matomo][idSite]" id="idSite" class="neos-span12" >
+											<f:for each="{matomoHost.sites}" as="site">
+												<option value="{site.idsite}"
+														{f:if(condition:'{settings.idSite} == {site.idsite}',then:'selected="selected"')}>
+												{site.name}</option>
+											</f:for>
+										</select>
+									</div>
+								</f:else>
+							</f:if>
+						</div>
 					</f:if>
 				</fieldset>
 
 				<fieldset class="neos-span7 neos-offset1">
 					<legend>Site Settings</legend>
-					<table class="neos-table">
-						<thead>
-						<tr>
-							<th>ID</th>
-							<th>Name</th>
-							<th colspan="2">Url</th>
-						</tr>
-						</thead>
-						<tbody>
-						<f:for each="{matomoHost.sites}" as="site" key="number">
-							<tr>
-								<td>{site.idsite}</td>
-								<td>{site.name}</td>
-								<td>{site.main_url}</td>
-								<td class="neos-action">
-									<div class="neos-pull-right">
-										<f:link.action action="editSite" arguments="{matomoSite: site}" class="neos-button neos-button-primary" title="Click to edit">
-											<i class="icon-pencil icon-white"></i>
-										</f:link.action>
-									</div>
-								</td>
-							</tr>
-						</f:for>
-						</tbody>
-					</table>
+
+					<f:if condition="{matomoError}">
+						<f:then>
+							<i>{matomoError}</i>
+						</f:then>
+						<f:else>
+							<table class="neos-table">
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th colspan="2">Url</th>
+								</tr>
+								</thead>
+								<tbody>
+								<f:for each="{matomoHost.sites}" as="site" key="number">
+									<tr>
+										<td>{site.idsite}</td>
+										<td>{site.name}</td>
+										<td>{site.main_url}</td>
+										<td class="neos-action">
+											<div class="neos-pull-right">
+												<f:link.action action="editSite" arguments="{matomoSite: site}" class="neos-button neos-button-primary" title="Click to edit">
+													<i class="icon-pencil icon-white"></i>
+												</f:link.action>
+											</div>
+										</td>
+									</tr>
+								</f:for>
+								</tbody>
+							</table>
+						</f:else>
+					</f:if>
 				</fieldset>
 			</div>
 
