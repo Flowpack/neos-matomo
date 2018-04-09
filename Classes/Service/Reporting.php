@@ -87,7 +87,7 @@ class Reporting extends AbstractServiceController
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             try {
-                $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
+                $pageUrl = $this->getLiveNodeUri($node, $controllerContext)->__toString();
             } catch (\Exception $e) {
                 $this->systemLogger->log($e->getMessage(), LOG_WARNING);
                 return null;
