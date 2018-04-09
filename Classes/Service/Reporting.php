@@ -95,7 +95,7 @@ class Reporting extends AbstractServiceController
 
             $arguments = array_filter($arguments, function($value, $key) {
                 return !empty($value) && !in_array($key, ['view', 'device', 'type']);
-            });
+            }, ARRAY_FILTER_USE_BOTH);
 
             if (in_array($arguments['view'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
                 $arguments['segment'] = 'pageUrl==' . $pageUrl;
