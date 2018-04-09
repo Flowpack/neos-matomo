@@ -68,17 +68,8 @@ class Reporting extends AbstractServiceController
     public function callAPI($methodName, $arguments = [])
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
-            $params = 'method=' . $methodName;
-            foreach ($arguments as $key => $value) {
-                if ($value != '') {
-                    $params .= '&' . $key . '=' . rawurlencode($value);
-                }
-            }
-
-            $apiCallUrl = $this->settings['protocol'] . '://' . $this->settings['host'] . '/index.php?module=API&format=json&' . $params;
-            $apiCallUrl .= '&idSite=' . $this->settings['idSite'] . '&token_auth=' . $this->settings['token_auth'];
+            $apiCallUrl = $this->buildApiCallUrl(array_merge($arguments, ['method' => $methodName]));
             $response = $this->request($apiCallUrl);
-
             return json_decode($response->getContent(), TRUE);
         }
         return [];
@@ -95,13 +86,6 @@ class Reporting extends AbstractServiceController
     public function getNodeStatistics($node = NULL, $controllerContext = NULL, $arguments = [])
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
-            $params = '';
-            foreach ($arguments as $key => $value) {
-                if (!empty($value) && $key != 'view' && $key != 'device' && $key != 'type') {
-                    $params .= '&' . $key . '=' . rawurlencode($value);
-                }
-            }
-
             try {
                 $pageUrl = urlencode($this->getLiveNodeUri($node, $controllerContext)->__toString());
             } catch (\Exception $e) {
@@ -109,47 +93,37 @@ class Reporting extends AbstractServiceController
                 return null;
             }
 
-            $apiCallUrl = join('', [
-                $this->settings['protocol'] . '://' . $this->settings['host'],
-                '/index.php?module=API&format=json' . $params,
-                '&pageUrl=' . $pageUrl,
-                '&idSite=' . $this->settings['idSite'],
-                '&token_auth=' . $this->settings['token_auth']
-            ]);
+            $arguments = array_filter($arguments, function($value, $key) {
+                return !empty($value) && !in_array($key, ['view', 'device', 'type']);
+            });
 
-            if ($arguments['view'] == 'TimeSeriesView') {
-                $response = $this->request($apiCallUrl);
-
-                return new TimeSeriesDataResult($response);
+            if (in_array($arguments['view'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
+                $arguments['segment'] = 'pageUrl==' . $pageUrl;
             }
-            if ($arguments['view'] == 'ColumnView') {
-                $response = $this->request($apiCallUrl);
 
-                return new ColumnDataResult($response);
-            }
-            if ($arguments['type'] == 'device') {
-                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->request($apiCallUrl);
+            $arguments['pageUrl'] = $pageUrl;
+            $apiCallUrl = $this->buildApiCallUrl($arguments);
+            $response = $this->request($apiCallUrl);
 
-                return new DeviceDataResult($response);
-            }
-            if ($arguments['type'] == 'osFamilies') {
-                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->request($apiCallUrl);
-
-                return new OperatingSystemDataResult($response);
-            }
-            if ($arguments['type'] == 'browsers') {
-                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->request($apiCallUrl);
-
-                return new BrowserDataResult($response);
-            }
-            if ($arguments['type'] == 'outlinks') {
-                $apiCallUrl .= '&segment=pageUrl==' . $pageUrl;
-                $response = $this->request($apiCallUrl);
-
-                return new OutlinkDataResult($response);
+            switch ($arguments['view']) {
+                case 'TimeSeriesView':
+                    return new TimeSeriesDataResult($response);
+                    break;
+                case 'ColumnView':
+                    return new ColumnDataResult($response);
+                    break;
+                case 'device':
+                    return new DeviceDataResult($response);
+                    break;
+                case 'osFamilies':
+                    return new OperatingSystemDataResult($response);
+                    break;
+                case 'browsers':
+                    return new BrowserDataResult($response);
+                    break;
+                case 'outlinks':
+                    return new OutlinkDataResult($response);
+                    break;
             }
         }
         return null;
@@ -197,5 +171,23 @@ class Reporting extends AbstractServiceController
             $this->systemLogger->log($e->getMessage(), LOG_WARNING);
         }
         return null;
+    }
+
+    /**
+     * @param $methodName
+     * @param array $arguments
+     * @return Uri
+     */
+    protected function buildApiCallUrl(array $arguments = [])
+    {
+        $apiCallUrl = new Uri($this->settings['protocol'] . '://' . $this->settings['host']);
+        $apiCallUrl->setPath('index.php');
+        $apiCallUrl->setQuery(http_build_query(array_merge([
+            'module' => 'API',
+            'format' => 'json',
+            'idSite' => $this->settings['idSite'],
+            'token_auth' => $this->settings['token_auth'],
+        ], $arguments)));
+        return $apiCallUrl;
     }
 }
