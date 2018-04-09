@@ -29,8 +29,17 @@ Initially this package was called `portachtzig/neos-piwik`. Thanks to the creato
 
 + **cURL php extension** for api calls
 + **Neos CMS** >= 3.3
++ **Matomo** >= 3.3
 + A **Matomo instance** that is reachable via **https**
 + A Neos Backend User with the Role **Neos.Neos:Administrator**
+
+### Compatibility with older versions
+
+The version 2 of this package is still compatible with Piwik instances
+but might at some point not work anymore when Matomo gets a bigger update.
+
+Always check that your tracking software is up-to-date and use the latest
+releases of this package if possible.
 
 - - -
 
