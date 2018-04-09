@@ -93,10 +93,6 @@ class Reporting extends AbstractServiceController
                 return null;
             }
 
-            $arguments = array_filter($arguments, function($value, $key) {
-                return !empty($value) && !in_array($key, ['view', 'device', 'type']);
-            }, ARRAY_FILTER_USE_BOTH);
-
             if (in_array($arguments['view'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
                 $arguments['segment'] = 'pageUrl==' . $pageUrl;
             }
@@ -174,14 +170,20 @@ class Reporting extends AbstractServiceController
     }
 
     /**
-     * @param $methodName
+     * Build api call url based on the given arguments.
+     * Also filters some arguments we don't need in the request to the Matomo API.
+     *
      * @param array $arguments
      * @return Uri
      */
     protected function buildApiCallUrl(array $arguments = [])
     {
+        $arguments = array_filter($arguments, function($value, $key) {
+            return !empty($value) && !in_array($key, ['view', 'device', 'type']);
+        }, ARRAY_FILTER_USE_BOTH);
+
         $apiCallUrl = new Uri($this->settings['protocol'] . '://' . $this->settings['host']);
-        $apiCallUrl->setPath('index.php');
+        $apiCallUrl->setPath('/index.php');
         $apiCallUrl->setQuery(http_build_query(array_merge([
             'module' => 'API',
             'format' => 'json',
