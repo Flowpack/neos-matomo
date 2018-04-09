@@ -75,20 +75,37 @@ Depending on your current FLOW_CONTEXT you might want to flush the cache.
 
 ![matomo-logo](Documentation/Images/matomo-config.png)
 
-To connect Neos with your Matomo installation you just have to enter your hostname and token_auth in the 
-in your `Settings.yaml` to track your user's statistics.
-You can use the backend module then to verify your configuration.
+To connect Neos with your Matomo installation you just have to enter some properties 
+in your `Settings.yaml` to track your user's statistics. You can have the configuration in your site package
+or add it during deployment.
+You can also use the included backend module then to verify your configuration.
 
-+ **Host**
-You can skip the protocol prefix, because https is forced here, since the authentication token is an URL parameter.
++ **host**
+Enter your Matomo installations hostname without protocol. 
 
-+ **Token**
-You have to enter a valid auth token of a Matomo superuser, because only superusers can list and edit sites in Matomo.
++ **host**
+You should always have your Matomo installation configured with https, but you can change it for testing purposes.
 
-+ **Matomo Site to use for this Neos installation**
-After the connection has been established, the form will provide you with a site select box.
++ **token_auth**
+You have to enter a valid auth token of a Matomo user who has the `view` permissions for the configured site.
 
-Additionally you will be able to edit basic settings of all your Matomo sites.
++ **idSite**
+You have to enter the id of the site you configured in Matomo.
+
++ **apiTimeout**
+You can change the default timeout of 10 seconds after which the backend will cancel requests to your
+Matomo installation.
+
+### This is an example of how it has to look:
+
+    Flowpack:
+      Neos:
+        Matomo:
+          host: 'tracking.example.org'
+          protocol: 'https'
+          token_auth: 'abcdefg1234567890'
+          idSite: 1
+          apiTimeout: 10
 
 ## Additional features
 
