@@ -108,6 +108,8 @@ class Reporting extends AbstractServiceController
                 case 'ColumnView':
                     return new ColumnDataResult($response);
                     break;
+            }
+            switch ($arguments['type']) {
                 case 'device':
                     return new DeviceDataResult($response);
                     break;
