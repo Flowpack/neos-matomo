@@ -93,7 +93,7 @@ class Reporting extends AbstractServiceController
                 return null;
             }
 
-            if (in_array($arguments['view'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
+            if (array_key_exists('type', $arguments) && in_array($arguments['type'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
                 $arguments['segment'] = 'pageUrl==' . $pageUrl;
             }
 
