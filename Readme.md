@@ -117,6 +117,15 @@ The content of the iframe is loaded from the configured tracking host.
 
 You can adjust all settings that Matomo offers via their API.
 
+### Accessing the Matomo API
+
+You can access the Matomo API through this package by injecting the `Flowpack\Neos\Matomo\Service\Reporting` class.
+
+You can then use the public method `callAPI($methodName, $arguments = [])` to call any API method of Matomo and
+you will get the json decoded response as array.
+Some methods will need specific user permissions, if your tokens user doesn't have them a error message will be in the
+array.
+
 ## License
 
 Neos Matomo Package is released under the GPL v3 (or later) license.
