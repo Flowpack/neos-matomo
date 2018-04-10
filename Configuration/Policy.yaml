@@ -1,7 +1,7 @@
 privilegeTargets:
   Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege:
     Flowpack_Neos_Matomo_Backend_Module:
-      matcher: method(Flowpack\Neos\Matomo\Controller\Module\MatomoController->(index|update|editSite|updateSite)Action())
+      matcher: method(Flowpack\Neos\Matomo\Controller\Module\MatomoController->(index)Action())
 roles:
   'Neos.Neos:Administrator':
     privileges:
