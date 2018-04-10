@@ -101,6 +101,10 @@ class Reporting extends AbstractServiceController
             $apiCallUrl = $this->buildApiCallUrl($arguments);
             $response = $this->request($apiCallUrl);
 
+            if ($response === null) {
+                return null;
+            }
+
             switch ($arguments['view']) {
                 case 'TimeSeriesView':
                     return new TimeSeriesDataResult($response);
