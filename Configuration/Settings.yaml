@@ -30,4 +30,4 @@ Neos:
                 title: 'Configure Matomo'
     fusion:
       autoInclude:
-        FLowpack.Neos.Matomo: true
+        Flowpack.Neos.Matomo: true
