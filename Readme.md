@@ -54,7 +54,7 @@ Run the following command
 
 Instead of requiring `portachtzig/neos-piwik` you should now require `flowpack/neos-matomo` in your `composer.json`.
 
-Also if you use or override `Flowpack.Neos.Matomo:StatsTabMixin` you'll have to change the naming  
+Also if you use or override `Portachtzig.Neos.Piwik:StatsTabMixin` you'll have to change the naming  
 in your own NodeType configurations to `Flowpack.Neos.Matomo:StatsTabMixin`. 
 
 In your configuration file you have to change the path
