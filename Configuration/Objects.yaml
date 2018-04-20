@@ -1,0 +1,9 @@
+Flowpack\Neos\Matomo\Service\Reporting:
+  properties:
+    apiCache:
+      object:
+        factoryObjectName: Neos\Flow\Cache\CacheManager
+        factoryMethodName: getCache
+        arguments:
+          1:
+            value: FlowpackNeosMatomo_ApiCache

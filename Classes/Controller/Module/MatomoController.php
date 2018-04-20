@@ -34,10 +34,10 @@ class MatomoController extends AbstractModuleController
     public function indexAction()
     {
         $matomoHost = [
-            'ip' => $this->reportingService->callAPI('API.getIpFromHeader'),
-            'version' => $this->reportingService->callAPI('API.getMatomoVersion'),
-            'site' => $this->reportingService->callAPI('SitesManager.getSiteFromId'),
-            'headerLogo' => $this->reportingService->callAPI('API.getHeaderLogoUrl'),
+            'ip' => $this->reportingService->callAPI('API.getIpFromHeader', [], false),
+            'version' => $this->reportingService->callAPI('API.getMatomoVersion', [], false),
+            'site' => $this->reportingService->callAPI('SitesManager.getSiteFromId', [], false),
+            'headerLogo' => $this->reportingService->callAPI('API.getHeaderLogoUrl', [], false),
         ];
         $this->view->assign('matomoHost', $matomoHost);
     }

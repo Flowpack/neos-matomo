@@ -1,0 +1,4 @@
+FlowpackNeosMatomo_ApiCache:
+  backend: Neos\Cache\Backend\FileBackend
+  backendOptions:
+    defaultLifetime: 300

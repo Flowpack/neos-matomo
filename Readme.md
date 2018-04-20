@@ -46,9 +46,8 @@ releases of this package if possible.
 ## Installation
 
 Run the following command
-```
-	$ composer require flowpack/neos-matomo
-```
+
+    $ composer require flowpack/neos-matomo
 
 ### Updating from `neos-piwik` to `neos-matomo`
 
@@ -68,6 +67,9 @@ to
     Flowpack:
       Neos:
         Matomo:
+        
+Also we added caching for the api requests. Therefore by default the statistics will be kept up to 5 minutes before 
+a refresh occurs.
 
 ## Configuration
 After the package has been installed, there will be an additional Backend Module in Neos, called "Matomo".
@@ -96,7 +98,7 @@ You have to enter the id of the site you configured in Matomo.
 You can change the default timeout of 10 seconds after which the backend will cancel requests to your
 Matomo installation.
 
-### This is an example of how it has to look:
+### This is an example of how it can look:
 
     Flowpack:
       Neos:
@@ -105,7 +107,10 @@ Matomo installation.
           protocol: 'https'
           token_auth: 'abcdefg1234567890'
           idSite: 1
-          apiTimeout: 10
+          apiTimeout: 10 
+          cacheLifetimeByPeriod:
+            year: 86400
+            day: 3600
 
 ## Additional features
 
@@ -115,14 +120,32 @@ This package provides a small configurable iframe content element for Neos which
 to manually opt out of the tracking if "Do-Not-Track" is not enabled in their browser.
 The content of the iframe is loaded from the configured tracking host.
 
-You can adjust all settings that Matomo offers via their API.
+You can adjust all settings that Matomo offers via their API.      
+
+### API request caching
+
+By default the requests to the Matomo API will be cached depending on the period of the stat that is being checked.
+Some information is shown based on a period of a year. Here we use a default timeout of 1 day.
+Other stats are for one to several days. Here the preset for the timeout is 1 hour.
+
+The timeouts by period can be overriden in your `Settings.yaml`. See the example above.
+
+You can override the cache backend settings of this package in your own `Caches.yaml`:
+
+    FlowpackNeosMatomo_ApiCache:
+      backend: Neos\Cache\Backend\FileBackend
+      backendOptions:
+        defaultLifetime: 300
+        
+And if you don't want caching at all, just use the backend `Neos\Cache\Backend\NullBackend` instead of the 
+configured `FileBackend`. 
 
 ### Accessing the Matomo API
 
 You can access the Matomo API through this package by injecting the `Flowpack\Neos\Matomo\Service\Reporting` class.
 
-You can then use the public method `callAPI($methodName, $arguments = [])` to call any API method of Matomo and
-you will get the json decoded response as array.
+You can then use the public method `callAPI($methodName, $arguments = [], $useCache = true)` to call any API method 
+of Matomo and you will get the json decoded response as array.
 Some methods will need specific user permissions, if your tokens user doesn't have them a error message will be in the
 array.
 

@@ -18,6 +18,7 @@ use Flowpack\Neos\Matomo\Domain\Dto\DeviceDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OperatingSystemDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
+use Neos\Cache\Frontend\VariableFrontend;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Response;
 use Neos\Flow\Http\Uri;
@@ -26,6 +27,7 @@ use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Neos\Service\Controller\AbstractServiceController;
+use Neos\Utility\Exception\FilesException;
 
 /**
  * Class Reporting
@@ -59,17 +61,25 @@ class Reporting extends AbstractServiceController
     protected $browser;
 
     /**
+     * @Flow\Inject
+     *
+     * @var VariableFrontend
+     */
+    protected $apiCache;
+
+    /**
      * Call the Matomo Reporting API
      *
-     * @param $methodName string the method that should be called e.g. 'SitesManager.getAllSites'
-     * @param $arguments array that contains the httpRequest arguments for the apiCall
-     * @return array
+     * @param string $methodName is the method that should be called e.g. 'SitesManager.getAllSites'
+     * @param array $arguments contains the httpRequest arguments for the apiCall
+     * @param bool $useCache will return previously return data from Matomo if true
+     * @return array|null
      */
-    public function callAPI($methodName, $arguments = [])
+    public function callAPI($methodName, array $arguments = [], $useCache = true)
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             $apiCallUrl = $this->buildApiCallUrl(array_merge($arguments, ['method' => $methodName]));
-            return $this->request($apiCallUrl);
+            return $this->request($apiCallUrl, $useCache);
         }
         return null;
     }
@@ -77,12 +87,13 @@ class Reporting extends AbstractServiceController
     /**
      * Call the Matomo Reporting API for node specific statistics
      *
-     * @param $node NodeInterface
-     * @param $controllerContext ControllerContext
-     * @param $arguments array
+     * @param NodeInterface $node the node for which the statistics should be retrieved
+     * @param ControllerContext $controllerContext needed to build a valid node uri
+     * @param array $arguments contains the httpRequest arguments for the apiCall
+     * @param bool $useCache will return previously return data from Matomo if true
      * @return AbstractDataResult
      */
-    public function getNodeStatistics($node = NULL, $controllerContext = NULL, $arguments = [])
+    public function getNodeStatistics(NodeInterface $node = NULL, ControllerContext $controllerContext = NULL, array $arguments = [], $useCache = true)
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             try {
@@ -98,7 +109,8 @@ class Reporting extends AbstractServiceController
 
             $arguments['pageUrl'] = $pageUrl;
             $apiCallUrl = $this->buildApiCallUrl($arguments);
-            $results = $this->request($apiCallUrl);
+            $cacheLifetime = $this->getCacheLifetimeForArguments($arguments);
+            $results = $this->request($apiCallUrl, $useCache, $cacheLifetime);
 
             if ($results === null) {
                 return null;
@@ -159,10 +171,24 @@ class Reporting extends AbstractServiceController
      * Send a request via curl to the api endpoint and returns the response
      *
      * @param string $apiCallUrl
-     * @return Response
+     * @param bool $useCache
+     * @param integer $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
+     * @return array|null the json decoded content of the api response or null if an error occurs
      */
-    protected function request($apiCallUrl)
+    protected function request($apiCallUrl, $useCache = true, $cacheLifetime = null)
     {
+        $cacheIdentifier = sha1($apiCallUrl);
+        if ($useCache) {
+            try {
+                $cachedResults = $this->apiCache->get($cacheIdentifier);
+                if (is_array($cachedResults)) {
+                    return $cachedResults;
+                }
+            } catch (\Exception $e) {
+                $this->systemLogger->log($e->getMessage(), LOG_WARNING);
+            }
+        }
+
         $this->browserRequestEngine->setOption(CURLOPT_CONNECTTIMEOUT, $this->settings['apiTimeout']);
         $this->browser->setRequestEngine($this->browserRequestEngine);
 
@@ -170,6 +196,9 @@ class Reporting extends AbstractServiceController
             $response = $this->browser->request($apiCallUrl);
             if ($response !== null) {
                 $results = json_decode($response->getContent(), true);
+                if ($useCache) {
+                    $this->apiCache->set($cacheIdentifier, $results, [], $cacheLifetime);
+                }
                 return $results;
             }
         } catch (\Exception $e) {
@@ -187,7 +216,7 @@ class Reporting extends AbstractServiceController
      */
     protected function buildApiCallUrl(array $arguments = [])
     {
-        $arguments = array_filter($arguments, function($value, $key) {
+        $arguments = array_filter($arguments, function ($value, $key) {
             return !empty($value) && !in_array($key, ['view', 'device', 'type']);
         }, ARRAY_FILTER_USE_BOTH);
 
@@ -200,5 +229,22 @@ class Reporting extends AbstractServiceController
             'token_auth' => $this->settings['token_auth'],
         ], $arguments)));
         return $apiCallUrl;
+    }
+
+    /**
+     * Get the default cache lifetime based on query parameters
+     *
+     * @param array $arguments
+     * @return integer|null
+     */
+    protected function getCacheLifetimeForArguments(array $arguments = [])
+    {
+        if (array_key_exists('period', $arguments)) {
+            $cacheLifetimes = $this->settings['cacheLifetimeByPeriod'];
+            if (array_key_exists($arguments['period'], $cacheLifetimes)) {
+                return $cacheLifetimes[$arguments['period']];
+            }
+        }
+        return null;
     }
 }

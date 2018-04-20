@@ -6,6 +6,9 @@ Flowpack:
       token_auth: ''
       idSite: ''
       apiTimeout: 10
+      cacheLifetimeByPeriod:
+        year: 86400
+        day: 3600
 
 Neos:
   Neos:
