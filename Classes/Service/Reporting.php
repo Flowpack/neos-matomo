@@ -69,10 +69,9 @@ class Reporting extends AbstractServiceController
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             $apiCallUrl = $this->buildApiCallUrl(array_merge($arguments, ['method' => $methodName]));
-            $response = $this->request($apiCallUrl);
-            return json_decode($response->getContent(), TRUE);
+            return $this->request($apiCallUrl);
         }
-        return [];
+        return null;
     }
 
     /**
@@ -99,32 +98,32 @@ class Reporting extends AbstractServiceController
 
             $arguments['pageUrl'] = $pageUrl;
             $apiCallUrl = $this->buildApiCallUrl($arguments);
-            $response = $this->request($apiCallUrl);
+            $results = $this->request($apiCallUrl);
 
-            if ($response === null) {
+            if ($results === null) {
                 return null;
             }
 
             switch ($arguments['view']) {
                 case 'TimeSeriesView':
-                    return new TimeSeriesDataResult($response);
+                    return new TimeSeriesDataResult($results);
                     break;
                 case 'ColumnView':
-                    return new ColumnDataResult($response);
+                    return new ColumnDataResult($results);
                     break;
             }
             switch ($arguments['type']) {
                 case 'device':
-                    return new DeviceDataResult($response);
+                    return new DeviceDataResult($results);
                     break;
                 case 'osFamilies':
-                    return new OperatingSystemDataResult($response);
+                    return new OperatingSystemDataResult($results);
                     break;
                 case 'browsers':
-                    return new BrowserDataResult($response);
+                    return new BrowserDataResult($results);
                     break;
                 case 'outlinks':
-                    return new OutlinkDataResult($response);
+                    return new OutlinkDataResult($results);
                     break;
             }
         }
@@ -168,7 +167,11 @@ class Reporting extends AbstractServiceController
         $this->browser->setRequestEngine($this->browserRequestEngine);
 
         try {
-            return $this->browser->request($apiCallUrl);
+            $response = $this->browser->request($apiCallUrl);
+            if ($response !== null) {
+                $results = json_decode($response->getContent(), true);
+                return $results;
+            }
         } catch (\Exception $e) {
             $this->systemLogger->log($e->getMessage(), LOG_WARNING);
         }

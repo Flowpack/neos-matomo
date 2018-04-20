@@ -9,17 +9,8 @@ namespace Flowpack\Neos\Matomo\Domain\Dto;
  * source code.
  */
 
-use Neos\Flow\Http\Response;
-
 abstract class AbstractDataResult implements \JsonSerializable
 {
-
-    /**
-     * The response from Matomo containing serialized json data
-     *
-     * @var Response
-     */
-    protected $response;
 
     /**
      * The json decoded results
@@ -29,17 +20,11 @@ abstract class AbstractDataResult implements \JsonSerializable
     protected $results;
 
     /**
-     * @param Response $response
+     * @param array $results
      */
-    public function __construct(Response $response)
+    public function __construct(array $results)
     {
-        $this->response = $response;
-
-        if ($response !== null) {
-            $this->results = json_decode($this->response->getContent(), true);
-        } else {
-            $this->results = [];
-        }
+        $this->results = $results;
     }
 
     /**
