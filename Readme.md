@@ -182,7 +182,7 @@ Neos Matomo Package is released under the GPL v3 (or later) license.
 
 ## Screenshots 
 
-![visist per day / last week](Documentation/Images/demo-package-matomo.png)
+![visist per day / last week](Documentation/Images/demo-package-matomo.jpg)
 
 Backend view with selected Matomo Panel in the Property Inspector
 
