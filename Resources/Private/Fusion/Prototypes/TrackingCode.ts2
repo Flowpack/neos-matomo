@@ -2,12 +2,16 @@
 #
 prototype(Flowpack.Neos.Matomo:TrackingCode) < prototype(Neos.Fusion:Template) {
     templatePath = 'resource://Flowpack.Neos.Matomo/Private/Templates/Prototypes/TrackingCode.html'
+
     settings = ${Configuration.setting('Flowpack.Neos.Matomo')}
+    protocol = ${this.settings.protocol}
+    host = ${this.settings.host}
+    idSite = ${this.settings.idSite}
 
     // Show tracking code only in live workspace and if all necessary parameters are set
     @if {
         inLiveWorkspace = ${node.context.workspaceName == 'live'}
-        hostIsSet = ${this.settings.host}
-        idSiteIsSet = ${this.settings.idSite}
+        hostIsSet = ${this.host}
+        idSiteIsSet = ${this.idSite}
     }
 }

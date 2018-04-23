@@ -149,6 +149,33 @@ of Matomo and you will get the json decoded response as array.
 Some methods will need specific user permissions, if your tokens user doesn't have them a error message will be in the
 array.
 
+### Multi site compatibility
+
+You can override the site id (and the other settings) via fusion like this:
+
+    prototype(Flowpack.Neos.Matomo:TrackingCode) {
+        idSite = Neos.Fusion:Case {
+            myOtherSite {
+                condition = ${site == 'myOtherSite'}
+                renderer = 2
+            }
+    
+            myDefaultSite {
+                condition = ${true}
+                renderer = 1
+            }
+        }
+    }
+    
+Or read it from a sites property like this:
+
+    prototype(Flowpack.Neos.Matomo:TrackingCode) {
+        idSite = ${q(site).property('trackingId') ? q(site).property('trackingId') : this.settings.idSite}
+    }
+    
+Then you even have a fallback to your settings if the field is left empty. 
+This is useful when having several microsites which are managed from the backend.
+
 ## License
 
 Neos Matomo Package is released under the GPL v3 (or later) license.
