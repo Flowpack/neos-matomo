@@ -4,7 +4,7 @@
     "description": "Track visits of your Neos site with the Matomo Open Analytics Platform!",
     "license": "GPL-3.0+",
     "require": {
-        "neos/neos": "~3.3",
+        "neos/neos": "~3.3 || ~4.0",
         "ext-curl": "*"
     },
     "replace": {
@@ -88,7 +88,10 @@
             "Neos.Fusion-20170120013047",
             "Neos.Flow-20170125103800",
             "Neos.Seo-20170127154600",
-            "Neos.Flow-20170127183102"
+            "Neos.Flow-20170127183102",
+            "Neos.Fusion-20180211175500",
+            "Neos.Fusion-20180211184832",
+            "Neos.Flow-20180415105700"
         ]
     }
 }
