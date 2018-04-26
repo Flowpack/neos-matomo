@@ -26,6 +26,7 @@ use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\Neos\Domain\Service\ContentContext;
 use Neos\Neos\Service\Controller\AbstractServiceController;
 use Neos\Utility\Exception\FilesException;
 
@@ -73,12 +74,13 @@ class Reporting extends AbstractServiceController
      * @param string $methodName is the method that should be called e.g. 'SitesManager.getAllSites'
      * @param array $arguments contains the httpRequest arguments for the apiCall
      * @param bool $useCache will return previously return data from Matomo if true
+     * @param string $sitename is the optional identifier for the multi site configuration, if not set the first configured siteId and tokenAuth will be used
      * @return array|null
      */
-    public function callAPI($methodName, array $arguments = [], $useCache = true)
+    public function callAPI($methodName, array $arguments = [], $useCache = true, $sitename = '')
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
-            $apiCallUrl = $this->buildApiCallUrl(array_merge($arguments, ['method' => $methodName]));
+            $apiCallUrl = $this->buildApiCallUrl($sitename, array_merge($arguments, ['method' => $methodName]));
             return $this->request($apiCallUrl, $useCache);
         }
         return null;
@@ -96,8 +98,15 @@ class Reporting extends AbstractServiceController
     public function getNodeStatistics(NodeInterface $node = NULL, ControllerContext $controllerContext = NULL, array $arguments = [], $useCache = true)
     {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
+            $contextProperties = $node->getContext()->getProperties();
+            $contextProperties['workspaceName'] = 'live';
+
+            /** @var ContentContext $liveContext */
+            $liveContext = $this->contextFactory->create($contextProperties);
+            $liveNode = $liveContext->getNodeByIdentifier($node->getIdentifier());
+
             try {
-                $pageUrl = $this->getLiveNodeUri($node, $controllerContext)->__toString();
+                $pageUrl = $this->getLiveNodeUri($liveNode, $controllerContext)->__toString();
             } catch (\Exception $e) {
                 $this->systemLogger->log($e->getMessage(), LOG_WARNING);
                 return null;
@@ -106,9 +115,9 @@ class Reporting extends AbstractServiceController
             if (array_key_exists('type', $arguments) && in_array($arguments['type'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
                 $arguments['segment'] = 'pageUrl==' . $pageUrl;
             }
-
             $arguments['pageUrl'] = $pageUrl;
-            $apiCallUrl = $this->buildApiCallUrl($arguments);
+
+            $apiCallUrl = $this->buildApiCallUrl($liveContext->getCurrentSite()->getNodeName(), $arguments);
             $cacheLifetime = $this->getCacheLifetimeForArguments($arguments);
             $results = $this->request($apiCallUrl, $useCache, $cacheLifetime);
 
@@ -145,18 +154,14 @@ class Reporting extends AbstractServiceController
     /**
      * Resolve an URI for the given node in the live workspace (this is where analytics usually are collected)
      *
-     * @param NodeInterface $node
+     * @param NodeInterface $liveNode
      * @param ControllerContext $controllerContext
      * @return Uri
      * @throws StatisticsNotAvailableException If the node was not yet published and no live workspace URI can be resolved
      * @throws \Exception
      */
-    protected function getLiveNodeUri(NodeInterface $node, ControllerContext $controllerContext)
+    protected function getLiveNodeUri(NodeInterface $liveNode, ControllerContext $controllerContext)
     {
-        $contextProperties = $node->getContext()->getProperties();
-        $contextProperties['workspaceName'] = 'live';
-        $liveContext = $this->contextFactory->create($contextProperties);
-        $liveNode = $liveContext->getNodeByIdentifier($node->getIdentifier());
         if ($liveNode === NULL) {
             throw new StatisticsNotAvailableException('Matomo Statistics are only available on a published node', 1445812693);
         }
@@ -165,7 +170,6 @@ class Reporting extends AbstractServiceController
 
         return $nodeUri;
     }
-
 
     /**
      * Send a request via curl to the api endpoint and returns the response
@@ -211,22 +215,41 @@ class Reporting extends AbstractServiceController
      * Build api call url based on the given arguments.
      * Also filters some arguments we don't need in the request to the Matomo API.
      *
+     * @param string $sitename
      * @param array $arguments
      * @return Uri
      */
-    protected function buildApiCallUrl(array $arguments = [])
+    protected function buildApiCallUrl($sitename = '', array $arguments = [])
     {
         $arguments = array_filter($arguments, function ($value, $key) {
             return !empty($value) && !in_array($key, ['view', 'device', 'type']);
         }, ARRAY_FILTER_USE_BOTH);
+
+        $idSite = $this->settings['idSite'];
+        if (is_array($idSite)) {
+            if (is_string($sitename) && array_key_exists($sitename, $idSite)) {
+                $idSite = $idSite[$sitename];
+            } else {
+                $idSite = array_values($idSite)[0];
+            }
+        }
+
+        $tokenAuth = $this->settings['token_auth'];
+        if (is_array($tokenAuth)) {
+            if (is_string($sitename) && array_key_exists($sitename, $tokenAuth)) {
+                $tokenAuth = $tokenAuth[$sitename];
+            } else {
+                $tokenAuth = array_values($tokenAuth)[0];
+            }
+        }
 
         $apiCallUrl = new Uri($this->settings['protocol'] . '://' . $this->settings['host']);
         $apiCallUrl->setPath('/index.php');
         $apiCallUrl->setQuery(http_build_query(array_merge([
             'module' => 'API',
             'format' => 'json',
-            'idSite' => $this->settings['idSite'],
-            'token_auth' => $this->settings['token_auth'],
+            'idSite' => $idSite,
+            'token_auth' => $tokenAuth,
         ], $arguments)));
         return $apiCallUrl;
     }

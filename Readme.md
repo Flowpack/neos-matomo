@@ -151,30 +151,21 @@ array.
 
 ### Multi site compatibility
 
-You can override the site id (and the other settings) via fusion like this:
+The Matomo site id and token in the `Settings.yaml` can also be defined as array and this way you can configure as many sites 
+as you want. The plugin will then check for the current sites nodename in this array.
+If no matching site is found, the first entry will be used.
 
-    prototype(Flowpack.Neos.Matomo:TrackingCode) {
-        idSite = Neos.Fusion:Case {
-            myOtherSite {
-                condition = ${site == 'myOtherSite'}
-                renderer = 2
-            }
-    
-            myDefaultSite {
-                condition = ${true}
-                renderer = 1
-            }
-        }
-    }
-    
-Or read it from a sites property like this:
+See this example with one token but several sites:
 
-    prototype(Flowpack.Neos.Matomo:TrackingCode) {
-        idSite = ${q(site).property('trackingId') ? q(site).property('trackingId') : this.settings.idSite}
-    }
-    
-Then you even have a fallback to your settings if the field is left empty. 
-This is useful when having several microsites which are managed from the backend.
+    Flowpack:
+      Neos:
+        Matomo:
+          host: tracking.example.org
+          token_auth: 12345678910
+          idSite:
+            myfirstsite: 1
+            mysecondsite: 2
+            mythirdsite: 2
 
 ## License
 
