@@ -7,86 +7,114 @@
 <f:section name="Content">
     <br>
     <div class="neos-row-fluid">
-        <div class="neos-span6">
-            <h2>Configuration</h2>
-            <br>
+        <div class="neos-span8">
             <div class="neos-control-group">
-                <strong>Host:</strong>
-                {settings.host}
+                <h2>Matomo Host Information</h2>
+                <table class="neos-table">
+                    <tr>
+                        <td>Host</td>
+                        <td>{settings.host}</td>
+                    </tr>
+                    <tr>
+                        <td>Protocol</td>
+                        <td>
+                            {settings.protocol}
+                            <span data-toggle="modal" class="neos-inline neos-button neos-button-small"
+                                  href="#protocol-modal">?</span>
+
+                            <div class="neos-hide" id="protocol-modal">
+                                <div class="neos-modal">
+                                    <div class="neos-modal-header">
+                                        <button type="button" class="neos-close neos-button" data-dismiss="modal"></button>
+                                        <div class="neos-header">Warning</div>
+                                    </div>
+                                    <div class="neos-subheader">
+                                        <p>
+                                            Be aware that using <b>HTTP</b> for communication with your Matomo host
+                                            <b>{settings.host}</b> will result in your super user's auth_token being transmitted as an
+                                            unencrypted URL parameter!
+                                            <br>
+                                            <br>
+                                        </p>
+                                    </div>
+                                    <div class="neos-modal-footer">
+                                        <a href="#" class="neos-button" data-dismiss="modal">OK</a>
+                                    </div>
+                                </div>
+                                <div class="neos-modal-backdrop neos-in"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>IP Address</td>
+                        <td>
+                            <f:if condition="{matomoHost.ip.value}">
+                                <f:then>
+                                    {matomoHost.ip.value} <i class="icon icon-check-circle-o"></i>
+                                </f:then>
+                                <f:else>
+                                    <i>Could not retrieve IP</i> <i class="icon icon-exclamation-triangle"></i>
+                                </f:else>
+                            </f:if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Version</td>
+                        <td>
+                            <f:if condition="{matomoHost.version.value}">
+                                <f:then>
+                                    {matomoHost.version.value} <i class="icon icon-check-circle-o"></i>
+                                </f:then>
+                                <f:else>
+                                    <i>Could not retrieve version</i> <i class="icon icon-exclamation-triangle"></i>
+                                </f:else>
+                            </f:if>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="neos-control-group">
-                <strong>Protocol:</strong>
-                {settings.protocol}
-                <span data-toggle="modal" class="neos-inline neos-button neos-button-small"
-                      href="#protocol-modal">?</span>
-            </div>
-
-            <div class="neos-hide" id="protocol-modal">
-                <div class="neos-modal">
-                    <div class="neos-modal-header">
-                        <button type="button" class="neos-close neos-button" data-dismiss="modal"></button>
-                        <div class="neos-header">Warning</div>
-                    </div>
-                    <div class="neos-subheader">
-                        <p>
-                            Be aware that using <b>HTTP</b> for communication with your Matomo host
-                            <b>{settings.host}</b> will result in your super user's auth_token being transmitted as an
-                            unencrypted URL parameter!
-                            <br>
-                            <br>
-                        </p>
-                    </div>
-                    <div class="neos-modal-footer">
-                        <a href="#" class="neos-button" data-dismiss="modal">OK</a>
-                    </div>
-                </div>
-                <div class="neos-modal-backdrop neos-in"></div>
+                <h3>Tokens</h3>
+                <table class="neos-table">
+                    <tr>
+                        <th>Sitename</th>
+                        <th>Authentication Token</th>
+                    </tr>
+                    <f:for each="{tokens}" key="sitename" as="token">
+                        <tr>
+                            <td>{sitename}</td>
+                            <td>{token}</td>
+                        </tr>
+                    </f:for>
+                </table>
             </div>
 
             <div class="neos-control-group">
-                <strong>Token:</strong>
-                {settings.token_auth}
-            </div>
-        </div>
-
-        <div class="neos-span6 neos-pull-right">
-            <h2>Matomo Host Information</h2>
-            <br>
-            <div class="neos-control-group">
-                <strong>IP Address:</strong>
-                <f:if condition="{matomoHost.ip.value}">
-                    <f:then>
-                        {matomoHost.ip.value} <i class="icon icon-check-circle-o"></i>
-                    </f:then>
-                    <f:else>
-                        <i>Could not retrieve IP</i> <i class="icon icon-exclamation-triangle"></i>
-                    </f:else>
-                </f:if>
-            </div>
-
-            <div class="neos-control-group">
-                <strong>Version:</strong>
-                <f:if condition="{matomoHost.version.value}">
-                    <f:then>
-                        {matomoHost.version.value} <i class="icon icon-check-circle-o"></i>
-                    </f:then>
-                    <f:else>
-                        <i>Could not retrieve version</i> <i class="icon icon-exclamation-triangle"></i>
-                    </f:else>
-                </f:if>
-            </div>
-
-            <div class="neos-control-group">
-                <strong>Sitename:</strong>
-                <f:if condition="{matomoHost.site.0}">
-                    <f:then>
-                        {matomoHost.site.0.name} <i class="icon icon-check-circle-o"></i>
-                    </f:then>
-                    <f:else>
-                        <i>{matomoHost.site.message}</i> <i class="icon icon-exclamation-triangle"></i>
-                    </f:else>
-                </f:if>
+                <h3>Site mapping</h3>
+                <table class="neos-table">
+                    <tr>
+                        <th>Sitename</th>
+                        <th>Matomo Site ID</th>
+                        <th>Matomo Site Name</th>
+                    </tr>
+                    <f:for each="{sites}" key="sitename" as="site">
+                        <tr>
+                            <td>{sitename}</td>
+                            <td>{site.id}</td>
+                            <td>
+                                <f:if condition="{site.matomoName.0}">
+                                    <f:then>
+                                        {site.matomoName.0.name} <i class="icon icon-check-circle-o"></i>
+                                    </f:then>
+                                    <f:else>
+                                        <i>{site.matomoName.message}</i> <i class="icon icon-exclamation-triangle"></i>
+                                    </f:else>
+                                </f:if>
+                            </td>
+                        </tr>
+                    </f:for>
+                </table>
             </div>
         </div>
     </div>

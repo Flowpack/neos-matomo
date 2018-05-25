@@ -7,6 +7,7 @@ prototype(Flowpack.Neos.Matomo:TrackingCode) < prototype(Neos.Fusion:Template) {
     protocol = ${this.settings.protocol}
     host = ${this.settings.host}
     idSite = ${this.settings.idSite}
+    idSite.@process.multiSite = ${Type.isArray(value) ? value[site.name] || Array.first(value) : value}
 
     // Show tracking code only in live workspace and if all necessary parameters are set
     @if {
