@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Flowpack.Neos.Matomo" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="header.host" xml:space="preserve">
+                <source>Matomo Host Information</source>
+                <target>Matomo Host Informationen</target>
+            </trans-unit>
+            <trans-unit id="header.tokens" xml:space="preserve">
+                <source>Tokens</source>
+                <target>Tokens</target>
+            </trans-unit>
+            <trans-unit id="header.mapping" xml:space="preserve">
+                <source>Site mapping</source>
+                <target>Zuordnung der Seiten</target>
+            </trans-unit>
+
+            <trans-unit id="label.host" xml:space="preserve">
+                <source>Host</source>
+                <target>Host</target>
+            </trans-unit>
+            <trans-unit id="label.protocol" xml:space="preserve">
+                <source>Protocol</source>
+                <target>Protokoll</target>
+            </trans-unit>
+            <trans-unit id="label.ip" xml:space="preserve">
+                <source>IP Address</source>
+                <target>IP-Adresse</target>
+            </trans-unit>
+            <trans-unit id="label.version" xml:space="preserve">
+                <source>Version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="label.sitename" xml:space="preserve">
+                <source>Sitename</source>
+                <target>Seitenname</target>
+            </trans-unit>
+            <trans-unit id="label.siteid" xml:space="preserve">
+                <source>Matomo Site ID</source>
+                <target>Matomo Seiten ID</target>
+            </trans-unit>
+            <trans-unit id="label.matomositename" xml:space="preserve">
+                <source>Matomo Site Name</source>
+                <target>Matomo Seitenname</target>
+            </trans-unit>
+            <trans-unit id="label.token" xml:space="preserve">
+                <source>Authentication Token</source>
+                <target>Authentifizierungstoken</target>
+            </trans-unit>
+
+            <trans-unit id="warning.http" xml:space="preserve">
+                <source>
+                    Be aware that using HTTP for communication with your Matomo host "{0}"
+                    will result in your super user's auth_token being transmitted as an unencrypted URL parameter!
+                </source>
+                <target>
+                    Beachten Sie bitte, dass die Verwendung von HTTP für die Kommunikation mit Ihrem Matomo Host "{0}"
+                    dazu führt, dass der auth_token Ihres Administratoraccounts unverschlüsselt übertragen wird!
+                </target>
+            </trans-unit>
+            <trans-unit id="warning.version" xml:space="preserve">
+                <source>Could not retrieve IP</source>
+                <target>Die IP konnte nicht ermittelt werden</target>
+            </trans-unit>
+            <trans-unit id="warning.ip" xml:space="preserve">
+                <source>Could not retrieve version</source>
+                <target>Die Version konnte nicht ermittelt werden</target>
+            </trans-unit>
+
+            <trans-unit id="confirmation.ok" xml:space="preserve">
+                <source>OK</source>
+                <target>OK</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
