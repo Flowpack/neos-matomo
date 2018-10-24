@@ -19,9 +19,9 @@
                         <td>Protocol</td>
                         <td>
                             {settings.protocol}
-                            <f:if condition="{settings.protocol}!=https">
-                            <span data-toggle="modal" class="neos-inline neos-button neos-button-small"
-                                  href="#protocol-modal">?</span>
+                            <f:if condition="{settings.protocol} != 'https'">
+                                <span data-toggle="modal" class="neos-inline neos-button neos-button-small"
+                                      href="#protocol-modal">?</span>
                             </f:if>
 
                             <div class="neos-hide" id="protocol-modal">
