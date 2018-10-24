@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="Flowpack.Neos.Matomo" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="header.host" xml:space="preserve">
+                <source>Matomo Host Information</source>
+            </trans-unit>
+            <trans-unit id="header.tokens" xml:space="preserve">
+                <source>Tokens</source>
+            </trans-unit>
+            <trans-unit id="header.mapping" xml:space="preserve">
+                <source>Site mapping</source>
+            </trans-unit>
+
+            <trans-unit id="label.host" xml:space="preserve">
+                <source>Host</source>
+            </trans-unit>
+            <trans-unit id="label.protocol" xml:space="preserve">
+                <source>Protocol</source>
+            </trans-unit>
+            <trans-unit id="label.ip" xml:space="preserve">
+                <source>IP Address</source>
+            </trans-unit>
+            <trans-unit id="label.version" xml:space="preserve">
+                <source>Version</source>
+            </trans-unit>
+            <trans-unit id="label.sitename" xml:space="preserve">
+                <source>Sitename</source>
+            </trans-unit>
+            <trans-unit id="label.siteid" xml:space="preserve">
+                <source>Matomo Site ID</source>
+            </trans-unit>
+            <trans-unit id="label.matomositename" xml:space="preserve">
+                <source>Matomo Site Name</source>
+            </trans-unit>
+            <trans-unit id="label.token" xml:space="preserve">
+                <source>Authentication Token</source>
+            </trans-unit>
+
+            <trans-unit id="warning.http" xml:space="preserve">
+                <source>
+                    Be aware that using HTTP for communication with your Matomo host "{0}"
+                    will result in your super user's auth_token being transmitted as an unencrypted URL parameter!
+                </source>
+            </trans-unit>
+            <trans-unit id="warning.version" xml:space="preserve">
+                <source>Could not retrieve IP</source>
+            </trans-unit>
+            <trans-unit id="warning.ip" xml:space="preserve">
+                <source>Could not retrieve version</source>
+            </trans-unit>
+
+            <trans-unit id="confirmation.ok" xml:space="preserve">
+                <source>OK</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

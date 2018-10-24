@@ -1,3 +1,4 @@
+{namespace neos=Neos\Neos\ViewHelpers}
 <f:layout name="Default"/>
 
 <f:section name="Title">
@@ -9,14 +10,14 @@
     <div class="neos-row-fluid">
         <div class="neos-span8">
             <div class="neos-control-group">
-                <h2>Matomo Host Information</h2>
+                <h3><neos:backend.translate id="header.host" package="Flowpack.Neos.Matomo"/></h3>
                 <table class="neos-table">
                     <tr>
-                        <td>Host</td>
+                        <td><neos:backend.translate id="label.host" package="Flowpack.Neos.Matomo"/></td>
                         <td>{settings.host}</td>
                     </tr>
                     <tr>
-                        <td>Protocol</td>
+                        <td><neos:backend.translate id="label.protocol" package="Flowpack.Neos.Matomo"/></td>
                         <td>
                             {settings.protocol}
                             <f:if condition="{settings.protocol} != 'https'">
@@ -32,15 +33,11 @@
                                     </div>
                                     <div class="neos-subheader">
                                         <p>
-                                            Be aware that using <b>HTTP</b> for communication with your Matomo host
-                                            <b>{settings.host}</b> will result in your super user's auth_token being transmitted as an
-                                            unencrypted URL parameter!
-                                            <br>
-                                            <br>
+                                            <neos:backend.translate id="warning.http" package="Flowpack.Neos.Matomo" arguments="{0: settings.host}"/>
                                         </p>
                                     </div>
                                     <div class="neos-modal-footer">
-                                        <a href="#" class="neos-button" data-dismiss="modal">OK</a>
+                                        <a href="#" class="neos-button" data-dismiss="modal"><neos:backend.translate id="confirmation.ok" package="Flowpack.Neos.Matomo"/></a>
                                     </div>
                                 </div>
                                 <div class="neos-modal-backdrop neos-in"></div>
@@ -48,27 +45,27 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>IP Address</td>
+                        <td><neos:backend.translate id="label.ip" package="Flowpack.Neos.Matomo"/></td>
                         <td>
                             <f:if condition="{matomoHost.ip.value}">
                                 <f:then>
                                     {matomoHost.ip.value} <i class="icon icon-check-circle-o"></i>
                                 </f:then>
                                 <f:else>
-                                    <i>Could not retrieve IP</i> <i class="icon icon-exclamation-triangle"></i>
+                                    <i><neos:backend.translate id="warning.ip" package="Flowpack.Neos.Matomo"/></i> <i class="icon icon-exclamation-triangle"></i>
                                 </f:else>
                             </f:if>
                         </td>
                     </tr>
                     <tr>
-                        <td>Version</td>
+                        <td><neos:backend.translate id="label.version" package="Flowpack.Neos.Matomo"/></td>
                         <td>
                             <f:if condition="{matomoHost.version.value}">
                                 <f:then>
                                     {matomoHost.version.value} <i class="icon icon-check-circle-o"></i>
                                 </f:then>
                                 <f:else>
-                                    <i>Could not retrieve version</i> <i class="icon icon-exclamation-triangle"></i>
+                                    <i><neos:backend.translate id="warning.version" package="Flowpack.Neos.Matomo"/></i> <i class="icon icon-exclamation-triangle"></i>
                                 </f:else>
                             </f:if>
                         </td>
@@ -77,11 +74,11 @@
             </div>
 
             <div class="neos-control-group">
-                <h3>Tokens</h3>
+                <h3><neos:backend.translate id="header.tokens" package="Flowpack.Neos.Matomo"/></h3>
                 <table class="neos-table">
                     <tr>
-                        <th>Sitename</th>
-                        <th>Authentication Token</th>
+                        <th><neos:backend.translate id="label.sitename" package="Flowpack.Neos.Matomo"/></th>
+                        <th><neos:backend.translate id="label.token" package="Flowpack.Neos.Matomo"/></th>
                     </tr>
                     <f:for each="{tokens}" key="sitename" as="token">
                         <tr>
@@ -93,12 +90,12 @@
             </div>
 
             <div class="neos-control-group">
-                <h3>Site mapping</h3>
+                <h3><neos:backend.translate id="header.mapping" package="Flowpack.Neos.Matomo"/></h3>
                 <table class="neos-table">
                     <tr>
-                        <th>Sitename</th>
-                        <th>Matomo Site ID</th>
-                        <th>Matomo Site Name</th>
+                        <th><neos:backend.translate id="label.sitename" package="Flowpack.Neos.Matomo"/></th>
+                        <th><neos:backend.translate id="label.siteid" package="Flowpack.Neos.Matomo"/></th>
+                        <th><neos:backend.translate id="label.matomositename" package="Flowpack.Neos.Matomo"/></th>
                     </tr>
                     <f:for each="{sites}" key="sitename" as="site">
                         <tr>
