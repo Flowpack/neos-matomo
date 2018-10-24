@@ -244,8 +244,7 @@ class Reporting extends AbstractServiceController
         }
 
         $apiCallUrl = new Uri($this->settings['protocol'] . '://' . $this->settings['host']);
-        $installPath = empty($apiCallUrl->getPath()) ? '' : $apiCallUrl->getPath();
-        $apiCallUrl->setPath($installPath . '/index.php');
+        $apiCallUrl->setPath($apiCallUrl->getPath() . '/index.php');
         $apiCallUrl->setQuery(http_build_query(array_merge([
             'module' => 'API',
             'format' => 'json',
