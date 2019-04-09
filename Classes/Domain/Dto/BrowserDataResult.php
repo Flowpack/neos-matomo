@@ -22,12 +22,12 @@ class BrowserDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    $totalVisits = $totalVisits + $device['nb_visits'];
+                    $totalVisits = $totalVisits + ($device['nb_visits'] ?? 0);
                 }
                 foreach ($devices as $device) {
-                    $browser = $device['label'];
+                    $browser = $device['label'] ?? 0;
                     $clientBrowser[$browser] = 0;
-                    $clientBrowser[$browser] = $clientBrowser[$browser] + $device['nb_visits'];
+                    $clientBrowser[$browser] = $clientBrowser[$browser] + ($device['nb_visits'] ?? 0);
                     $allBrowser[] = [
                         'browsers' => $browser,
                         'uniquePageviews' => $clientBrowser[$browser],

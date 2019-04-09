@@ -27,16 +27,16 @@ class DeviceDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    if ($device['label'] == 'Desktop') {
-                        $clientDevices['Desktop'] = $clientDevices['Desktop'] + $device['nb_visits'];
+                    if (isset($device['label']) && $device['label'] == 'Desktop') {
+                        $clientDevices['Desktop'] = $clientDevices['Desktop'] + ($device['nb_visits'] ?? 0);
                     }
-                    if ($device['label'] == 'Tablet') {
-                        $clientDevices['Tablet'] = $clientDevices['Tablet'] + $device['nb_visits'];
+                    if (isset($device['label']) && $device['label'] == 'Tablet') {
+                        $clientDevices['Tablet'] = $clientDevices['Tablet'] + ($device['nb_visits'] ?? 0);
                     }
-                    if ($device['label'] == 'Smartphone') {
-                        $clientDevices['Smartphone'] = $clientDevices['Smartphone'] + $device['nb_visits'];
+                    if (isset($device['label']) && $device['label'] == 'Smartphone') {
+                        $clientDevices['Smartphone'] = $clientDevices['Smartphone'] + ($device['nb_visits'] ?? 0);
                     }
-                    $totalVisits = $totalVisits + $device['nb_visits'];
+                    $totalVisits = $totalVisits + ($device['nb_visits'] ?? 0);
                 }
             }
         }
