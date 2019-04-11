@@ -30,22 +30,12 @@ class OperatingSystemDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    if (isset($device['label']) && $device['label'] == 'GNU/Linux') {
-                        $clientOperatingSystems['GNU/Linux'] = $clientOperatingSystems['GNU/Linux'] + ($device['nb_visits'] ?? 0);
+                    $label = $device['label'] ?? 0;
+                    $nbVisits = $device['nb_visits'] ?? 0;
+                    if (array_key_exists($label, $clientOperatingSystems)) {
+                        $clientOperatingSystems[$label] += $nbVisits;
                     }
-                    if (isset($device['label']) && $device['label'] == 'iOS') {
-                        $clientOperatingSystems['iOS'] = $clientOperatingSystems['iOS'] + ($device['nb_visits'] ?? 0);
-                    }
-                    if (isset($device['label']) && $device['label'] == 'Apple') {
-                        $clientOperatingSystems['Apple'] = $clientOperatingSystems['Apple'] + ($device['nb_visits'] ?? 0);
-                    }
-                    if (isset($device['label']) && $device['label'] == 'Windows') {
-                        $clientOperatingSystems['Windows'] = $clientOperatingSystems['Windows'] + ($device['nb_visits'] ?? 0);
-                    }
-                    if (isset($device['label']) && $device['label'] == 'Android') {
-                        $clientOperatingSystems['Android'] = $clientOperatingSystems['Android'] + ($device['nb_visits'] ?? 0);
-                    }
-                    $totalVisits = $totalVisits + ($device['nb_visits'] ?? 0);
+                    $totalVisits += $nbVisits;
                 }
             }
         }

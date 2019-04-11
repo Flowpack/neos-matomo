@@ -23,13 +23,11 @@ class OutlinkDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    $totalVisits = $totalVisits + ($device['nb_visits'] ?? 0);
-
-                }
-                foreach ($devices as $device) {
+                    $nbHits = $device['nb_hits'] ?? 0;
+                    $totalVisits += $nbHits;
                     $outlink = $device['label'] ?? 0;
                     $visitedOutlinks[$outlink] = 0;
-                    $visitedOutlinks[$outlink] = $visitedOutlinks[$outlink] + ($device['nb_hits'] ?? 0);
+                    $visitedOutlinks[$outlink] += $nbHits;
                     $allOutlinks[] = [
                         'outlinks' => $outlink,
                         'visits' => $visitedOutlinks[$outlink],

@@ -27,16 +27,12 @@ class DeviceDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    if (isset($device['label']) && $device['label'] == 'Desktop') {
-                        $clientDevices['Desktop'] = $clientDevices['Desktop'] + ($device['nb_visits'] ?? 0);
+                    $label = $device['label'] ?? 0;
+                    $nbVisits = $device['nb_visits'] ?? 0;
+                    if (array_key_exists($label, $clientDevices)) {
+                        $clientDevices[$label] += $nbVisits;
                     }
-                    if (isset($device['label']) && $device['label'] == 'Tablet') {
-                        $clientDevices['Tablet'] = $clientDevices['Tablet'] + ($device['nb_visits'] ?? 0);
-                    }
-                    if (isset($device['label']) && $device['label'] == 'Smartphone') {
-                        $clientDevices['Smartphone'] = $clientDevices['Smartphone'] + ($device['nb_visits'] ?? 0);
-                    }
-                    $totalVisits = $totalVisits + ($device['nb_visits'] ?? 0);
+                    $totalVisits += $nbVisits;
                 }
             }
         }
