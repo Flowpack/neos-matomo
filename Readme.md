@@ -11,6 +11,7 @@ This package integrates the `Matomo Open Analytics Platform` into Neos and is al
  + adds a Backend Module to your Neos instance which helps checking your configuration
  + adds a tab to the Property Inspector, which shows time, device, OS and browser related statistics collected by Matomo
  + adds a customizeable content element which allows visitors to opt-out of tracking in the frontend
+ + Matomo Tag Manger support
 
 Inspired by the packages [neos/neos-googleanalytics](https://github.com/neos/neos-googleanalytics) and [khuppenbauer/MapSeven.Piwik](https://github.com/khuppenbauer/MapSeven.Piwik).
 
@@ -45,9 +46,11 @@ releases of this package if possible.
 
 ## Installation
 
-Run the following command
+Run the following command in your site package
 
-    $ composer require flowpack/neos-matomo
+    composer require --no-update flowpack/neos-matomo
+    
+Then run `composer update` in your project root.
 
 ### Updating from `neos-piwik` to `neos-matomo`
 
@@ -93,6 +96,12 @@ You have to enter a valid auth token of a Matomo user who has the `view` permiss
 
 + **idSite**
 You have to enter the id of the site you configured in Matomo.
+You should not set this if you also have `containerId` set.
+
++ **containerId**
+You have to enter the id of the tag manager container you configured in Matomo.
+Here you can also use the longer ids generated for dev & staging environments.
+You should not set this if you also have `idSite` set.
 
 + **apiTimeout**
 You can change the default timeout of 10 seconds after which the backend will cancel requests to your
@@ -106,7 +115,8 @@ Matomo installation.
           host: 'tracking.example.org'
           protocol: 'https'
           token_auth: 'abcdefg1234567890'
-          idSite: 1
+          idSite: 1 # Only if containerId is not set                                          
+          containerId: 'abcdef' # Only if idSite is not set
           apiTimeout: 10 
           cacheLifetimeByPeriod:
             year: 86400
@@ -166,6 +176,18 @@ See this example with one token but several sites:
             myfirstsite: 1
             mysecondsite: 2
             mythirdsite: 2
+
+And the same when used with tag manager:
+
+    Flowpack:
+      Neos:
+        Matomo:
+          host: tracking.example.org
+          token_auth: 12345678910
+          containerId:
+            myfirstsite: 'abc'
+            mysecondsite: 'def'
+            mythirdsite: 'ghi'
 
 ## License
 

@@ -1,0 +1,10 @@
+prototype(Neos.Neos:Page) {
+    matomoTrackingCode = Flowpack.Neos.Matomo:TrackingCode {
+        # Matomo suggests to include the tracking code directly before the closing <head> tag
+        @position = 'before closingHeadTag 100'
+    }
+    matomoTagManager = Flowpack.Neos.Matomo:TagManager {
+        # Matomo suggests to include the tracking code directly after the <head> tag
+        @position = 'after headTag 100'
+    }
+}
