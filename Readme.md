@@ -177,6 +177,18 @@ See this example with one token but several sites:
             mysecondsite: 2
             mythirdsite: 2
 
+And the same when used with tag manager:
+
+    Flowpack:
+      Neos:
+        Matomo:
+          host: tracking.example.org
+          token_auth: 12345678910
+          containerId:
+            myfirstsite: 'abc'
+            mysecondsite: 'def'
+            mythirdsite: 'ghi'
+
 ## License
 
 Neos Matomo Package is released under the GPL v3 (or later) license.
