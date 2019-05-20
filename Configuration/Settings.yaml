@@ -5,6 +5,7 @@ Flowpack:
       protocol: https
       token_auth: ''
       idSite: ''
+      containerId: ''
       apiTimeout: 10
       cacheLifetimeByPeriod:
         year: 86400

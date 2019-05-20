@@ -1,8 +1,1 @@
-include: 'Prototypes/*'
-
-prototype(Neos.Neos:Page) {
-  matomoTrackingCode = Flowpack.Neos.Matomo:TrackingCode {
-    # Matomo suggests to include the tracking code directly after the <body> tag
-    @position = 'after bodyTag 100'
-  }
-}
+include: **/*.fusion

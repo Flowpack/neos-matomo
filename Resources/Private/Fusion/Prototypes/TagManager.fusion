@@ -1,0 +1,26 @@
+prototype(Flowpack.Neos.Matomo:TagManager) < prototype(Neos.Fusion:Tag) {
+    @if.hasContainerId = ${this.containerId}
+
+    settings = ${Configuration.setting('Flowpack.Neos.Matomo')}
+    protocol = ${this.settings.protocol}
+    host = ${this.settings.host}
+    containerId = ${this.settings.containerId}
+
+    @context {
+        protocol = ${this.protocol}
+        host = ${this.host}
+        containerId = ${this.containerId}
+    }
+
+    tagName = 'script'
+    attributes {
+        type = 'text/javascript'
+    }
+    content = Neos.Fusion:Array {
+        mtm = 'var _mtm = _mtm || [];'
+        push = '_mtm.push({"mtm.startTime": (new Date().getTime()), "event": "mtm.Start"});'
+        createElement = 'var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];'
+        element = ${'g.type="text/javascript"; g.async=true; g.defer=true; g.src="' + protocol + '://' + host + '/js/container_' + containerId + '.js"; s.parentNode.insertBefore(g,s);'}
+    }
+    @process.wrapInComment = ${'<!-- Matomo Tag Manager -->' + value + '<!-- End Matomo Tag Manager -->'}
+}
