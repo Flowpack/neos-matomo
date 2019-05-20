@@ -96,12 +96,11 @@ You have to enter a valid auth token of a Matomo user who has the `view` permiss
 
 + **idSite**
 You have to enter the id of the site you configured in Matomo.
-You should not set this if you also have `containerId` set.
+This is also needed when using Matomo Tag Manager to allow showing statistics in the backend.
 
 + **containerId**
 You have to enter the id of the tag manager container you configured in Matomo.
 Here you can also use the longer ids generated for dev & staging environments.
-You should not set this if you also have `idSite` set.
 
 + **apiTimeout**
 You can change the default timeout of 10 seconds after which the backend will cancel requests to your
@@ -115,8 +114,8 @@ Matomo installation.
           host: 'tracking.example.org'
           protocol: 'https'
           token_auth: 'abcdefg1234567890'
-          idSite: 1 # Only if containerId is not set                                          
-          containerId: 'abcdef' # Only if idSite is not set
+          idSite: 1                                           
+          containerId: 'abcdef' # Optional
           apiTimeout: 10 
           cacheLifetimeByPeriod:
             year: 86400
@@ -183,7 +182,11 @@ And the same when used with tag manager:
       Neos:
         Matomo:
           host: tracking.example.org
-          token_auth: 12345678910
+          token_auth: 12345678910     
+          idSite:
+            myfirstsite: 1
+            mysecondsite: 2
+            mythirdsite: 2
           containerId:
             myfirstsite: 'abc'
             mysecondsite: 'def'
