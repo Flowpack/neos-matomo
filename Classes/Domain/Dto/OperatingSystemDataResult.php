@@ -30,7 +30,7 @@ class OperatingSystemDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    $label = $device['label'] ?? 0;
+                    $label = $device['label'] ?? '';
                     $nbVisits = $device['nb_visits'] ?? 0;
                     if (array_key_exists($label, $clientOperatingSystems)) {
                         $clientOperatingSystems[$label] += $nbVisits;

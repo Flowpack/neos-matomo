@@ -25,7 +25,10 @@ class OutlinkDataResult extends AbstractDataResult
                 foreach ($devices as $device) {
                     $nbHits = $device['nb_hits'] ?? 0;
                     $totalVisits += $nbHits;
-                    $outlink = $device['label'] ?? 0;
+                }
+                foreach ($devices as $device) {
+                    $nbHits = $device['nb_hits'] ?? 0;
+                    $outlink = $device['label'] ?? '';
                     $visitedOutlinks[$outlink] = 0;
                     $visitedOutlinks[$outlink] += $nbHits;
                     $allOutlinks[] = [

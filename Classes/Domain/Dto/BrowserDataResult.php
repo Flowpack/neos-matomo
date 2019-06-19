@@ -24,7 +24,10 @@ class BrowserDataResult extends AbstractDataResult
                 foreach ($devices as $device) {
                     $nbVisits = $device['nb_visits'] ?? 0;
                     $totalVisits += $nbVisits;
-                    $browser = $device['label'] ?? 0;
+                }
+                foreach ($devices as $device) {
+                    $nbVisits = $device['nb_visits'] ?? 0;
+                    $browser = $device['label'] ?? '';
                     $clientBrowser[$browser] = 0;
                     $clientBrowser[$browser] += $nbVisits;
                     $allBrowser[] = [
