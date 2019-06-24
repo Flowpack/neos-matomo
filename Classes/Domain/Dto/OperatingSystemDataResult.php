@@ -30,22 +30,12 @@ class OperatingSystemDataResult extends AbstractDataResult
         foreach ($this->results as $year => $devices) {
             if (is_array($devices)) {
                 foreach ($devices as $device) {
-                    if ($device['label'] == 'GNU/Linux') {
-                        $clientOperatingSystems['GNU/Linux'] = $clientOperatingSystems['GNU/Linux'] + $device['nb_visits'];
+                    $label = $device['label'] ?? '';
+                    $nbVisits = $device['nb_visits'] ?? 0;
+                    if (array_key_exists($label, $clientOperatingSystems)) {
+                        $clientOperatingSystems[$label] += $nbVisits;
                     }
-                    if ($device['label'] == 'iOS') {
-                        $clientOperatingSystems['iOS'] = $clientOperatingSystems['iOS'] + $device['nb_visits'];
-                    }
-                    if ($device['label'] == 'Apple') {
-                        $clientOperatingSystems['Apple'] = $clientOperatingSystems['Apple'] + $device['nb_visits'];
-                    }
-                    if ($device['label'] == 'Windows') {
-                        $clientOperatingSystems['Windows'] = $clientOperatingSystems['Windows'] + $device['nb_visits'];
-                    }
-                    if ($device['label'] == 'Android') {
-                        $clientOperatingSystems['Android'] = $clientOperatingSystems['Android'] + $device['nb_visits'];
-                    }
-                    $totalVisits = $totalVisits + $device['nb_visits'];
+                    $totalVisits += $nbVisits;
                 }
             }
         }

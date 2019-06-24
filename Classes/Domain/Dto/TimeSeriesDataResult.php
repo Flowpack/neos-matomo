@@ -24,11 +24,12 @@ class TimeSeriesDataResult extends AbstractDataResult
 
         foreach ($this->results as $key => $value) {
             if (!empty($value) && is_array($value)) {
+                $nbVisits = $value[0]['nb_visits'] ?? 0;
                 $rows[$i]['date'] = $key;
-                $rows[$i]['nb_visits'] = $value[0]['nb_visits'];
+                $rows[$i]['nb_visits'] = $nbVisits;
 
-                $totalVisits = $totalVisits + $value[0]['nb_visits'];
-                $totalHits = $totalHits + $value[0]['nb_hits'];
+                $totalVisits += $nbVisits;
+                $totalHits += ($value[0]['nb_hits'] ?? 0);
             } else {
                 $rows[$i]['date'] = $key;
                 $rows[$i]['nb_visits'] = 0;
