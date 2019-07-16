@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Domain\Dto;
 
 /*
@@ -10,30 +11,15 @@ namespace Flowpack\Neos\Matomo\Domain\Dto;
  * source code.
  */
 
-abstract class AbstractDataResult implements \JsonSerializable
+class ErrorDataResult extends AbstractDataResult
 {
-
     /**
-     * The json decoded results
-     *
-     * @var array
-     */
-    protected $results;
-
-    /**
-     * @param array $results
-     */
-    public function __construct(array $results)
-    {
-        $this->results = $results;
-    }
-
-    /**
-     * @return array
+     * {@inheritdoc}
      */
     public function jsonSerialize(): array
     {
-        return [];
+        return [
+            'message' => join(',', $this->results)
+        ];
     }
-
 }
