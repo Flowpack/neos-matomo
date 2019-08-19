@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Service\DataSource;
 
 /*
@@ -31,7 +33,7 @@ class MatomoDataSource extends AbstractDataSource
      *
      * {@inheritdoc}
      */
-    public function getData(NodeInterface $node = NULL, array $arguments)
+    public function getData(NodeInterface $node = NULL, array $arguments = [])
     {
         $data = $this->reportingService->getNodeStatistics($node, $this->controllerContext, $arguments);
 
