@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Controller\Module;
 
 /*
@@ -9,19 +11,18 @@ namespace Flowpack\Neos\Matomo\Controller\Module;
  * source code.
  */
 
+use Flowpack\Neos\Matomo\Service\Reporting;
 use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Controller\Module\AbstractModuleController;
 
 /**
  * Matomo Site Management Module Controller
- *
- * @package Flowpack\Neos\Matomo\Controller\Module\Management
  */
 class MatomoController extends AbstractModuleController
 {
     /**
      * @Flow\Inject
-     * @var \Flowpack\Neos\Matomo\Service\Reporting
+     * @var Reporting
      */
     protected $reportingService;
 
@@ -31,7 +32,7 @@ class MatomoController extends AbstractModuleController
      *
      * @return void
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         $matomoHost = [
             'ip' => $this->reportingService->callAPI('API.getIpFromHeader', [], false),

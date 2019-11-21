@@ -11,6 +11,7 @@ namespace Flowpack\Neos\Matomo\Service\DataSource;
  * source code.
  */
 
+use Flowpack\Neos\Matomo\Service\Reporting;
 use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
@@ -19,7 +20,7 @@ class MatomoDataSource extends AbstractDataSource
 {
     /**
      * @Flow\Inject
-     * @var \Flowpack\Neos\Matomo\Service\Reporting
+     * @var Reporting
      */
     protected $reportingService;
 

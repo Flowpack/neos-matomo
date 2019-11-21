@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Domain\Dto;
 
 /*
@@ -15,7 +17,7 @@ class TimeSeriesDataResult extends AbstractDataResult
     /**
      * {@inheritdoc}
      */
-    function jsonSerialize()
+    function jsonSerialize(): array
     {
         $i = 0;
         $totalVisits = 0;
