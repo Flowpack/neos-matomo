@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Flowpack\Neos\Matomo\Service;
 
@@ -18,17 +19,17 @@ use Flowpack\Neos\Matomo\Domain\Dto\DeviceDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OperatingSystemDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
+use GuzzleHttp\Psr7\Uri;
 use Neos\Cache\Frontend\VariableFrontend;
+use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Http\Response;
-use Neos\Flow\Http\Uri;
 use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Neos\Neos\Domain\Service\ContentContext;
 use Neos\Neos\Service\Controller\AbstractServiceController;
-use Neos\Utility\Exception\FilesException;
+use Neos\Neos\Service\LinkingService;
 
 /**
  * Class Reporting
@@ -45,13 +46,13 @@ class Reporting extends AbstractServiceController
 
     /**
      * @Flow\Inject
-     * @var \Neos\Neos\Service\LinkingService
+     * @var LinkingService
      */
     protected $linkingService;
 
     /**
      * @Flow\Inject
-     * @var \Neos\ContentRepository\Domain\Service\ContextFactoryInterface
+     * @var ContextFactoryInterface
      */
     protected $contextFactory;
 
@@ -77,8 +78,12 @@ class Reporting extends AbstractServiceController
      * @param string $sitename is the optional identifier for the multi site configuration, if not set the first configured siteId and tokenAuth will be used
      * @return array|null
      */
-    public function callAPI($methodName, array $arguments = [], $useCache = true, $sitename = '')
-    {
+    public function callAPI(
+        string $methodName,
+        array $arguments = [],
+        bool $useCache = true,
+        string $sitename = ''
+    ): ?array {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             $apiCallUrl = $this->buildApiCallUrl($sitename, array_merge($arguments, ['method' => $methodName]));
             return $this->request($apiCallUrl, $useCache);
@@ -95,8 +100,12 @@ class Reporting extends AbstractServiceController
      * @param bool $useCache will return previously return data from Matomo if true
      * @return AbstractDataResult
      */
-    public function getNodeStatistics(NodeInterface $node = NULL, ControllerContext $controllerContext = NULL, array $arguments = [], $useCache = true)
-    {
+    public function getNodeStatistics(
+        NodeInterface $node = null,
+        ControllerContext $controllerContext = null,
+        array $arguments = [],
+        $useCache = true
+    ): AbstractDataResult {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             $contextProperties = $node->getContext()->getProperties();
             $contextProperties['workspaceName'] = 'live';
@@ -108,11 +117,12 @@ class Reporting extends AbstractServiceController
             try {
                 $pageUrl = $this->getLiveNodeUri($liveNode, $controllerContext)->__toString();
             } catch (\Exception $e) {
-                $this->systemLogger->log($e->getMessage(), LOG_WARNING);
+                $this->logger->warning($e->getMessage());
                 return null;
             }
 
-            if (array_key_exists('type', $arguments) && in_array($arguments['type'], ['device', 'osFamilies', 'browsers', 'outlinks'])) {
+            if (array_key_exists('type', $arguments) && in_array($arguments['type'],
+                    ['device', 'osFamilies', 'browsers', 'outlinks'])) {
                 $arguments['segment'] = 'pageUrl==' . $pageUrl;
             }
             $arguments['pageUrl'] = $pageUrl;
@@ -160,12 +170,13 @@ class Reporting extends AbstractServiceController
      * @throws StatisticsNotAvailableException If the node was not yet published and no live workspace URI can be resolved
      * @throws \Exception
      */
-    protected function getLiveNodeUri(NodeInterface $liveNode, ControllerContext $controllerContext)
+    protected function getLiveNodeUri(NodeInterface $liveNode, ControllerContext $controllerContext): Uri
     {
-        if ($liveNode === NULL) {
-            throw new StatisticsNotAvailableException('Matomo Statistics are only available on a published node', 1445812693);
+        if ($liveNode === null) {
+            throw new StatisticsNotAvailableException('Matomo Statistics are only available on a published node',
+                1445812693);
         }
-        $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, NULL, 'html', TRUE);
+        $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, null, 'html', true);
         $nodeUri = new Uri($nodeUriString);
 
         return $nodeUri;
@@ -174,14 +185,14 @@ class Reporting extends AbstractServiceController
     /**
      * Send a request via curl to the api endpoint and returns the response
      *
-     * @param string $apiCallUrl
+     * @param Uri $apiCallUrl
      * @param bool $useCache
      * @param integer $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
      * @return array|null the json decoded content of the api response or null if an error occurs
      */
-    protected function request($apiCallUrl, $useCache = true, $cacheLifetime = null)
+    protected function request(Uri $apiCallUrl, bool $useCache = true, ?int $cacheLifetime = null): ?array
     {
-        $cacheIdentifier = sha1($apiCallUrl);
+        $cacheIdentifier = sha1($apiCallUrl->__toString());
         if ($useCache) {
             try {
                 $cachedResults = $this->apiCache->get($cacheIdentifier);
@@ -189,7 +200,8 @@ class Reporting extends AbstractServiceController
                     return $cachedResults;
                 }
             } catch (\Exception $e) {
-                $this->systemLogger->log($e->getMessage(), LOG_WARNING);
+
+                $this->logger->warning($e->getMessage());
             }
         }
 
@@ -199,14 +211,14 @@ class Reporting extends AbstractServiceController
         try {
             $response = $this->browser->request($apiCallUrl);
             if ($response !== null) {
-                $results = json_decode($response->getContent(), true);
+                $results = json_decode($response->getBody()->getContents(), true);
                 if ($useCache) {
                     $this->apiCache->set($cacheIdentifier, $results, [], $cacheLifetime);
                 }
                 return $results;
             }
         } catch (\Exception $e) {
-            $this->systemLogger->log($e->getMessage(), LOG_WARNING);
+            $this->logger->warning($e->getMessage());
         }
         return null;
     }
@@ -219,7 +231,7 @@ class Reporting extends AbstractServiceController
      * @param array $arguments
      * @return Uri
      */
-    protected function buildApiCallUrl($sitename = '', array $arguments = [])
+    protected function buildApiCallUrl(string $sitename = '', array $arguments = []): Uri
     {
         $arguments = array_filter($arguments, function ($value, $key) {
             return !empty($value) && !in_array($key, ['view', 'device', 'type']);
@@ -244,14 +256,14 @@ class Reporting extends AbstractServiceController
         }
 
         $apiCallUrl = new Uri($this->settings['protocol'] . '://' . $this->settings['host']);
-        $apiCallUrl->setPath($apiCallUrl->getPath() . '/index.php');
-        $apiCallUrl->setQuery(http_build_query(array_merge([
-            'module' => 'API',
-            'format' => 'json',
-            'idSite' => $idSite,
-            'token_auth' => $tokenAuth,
-        ], $arguments)));
-        return $apiCallUrl;
+        return $apiCallUrl
+            ->withPath($apiCallUrl->getPath() . '/index.php')
+            ->withQuery(http_build_query(array_merge([
+                'module' => 'API',
+                'format' => 'json',
+                'idSite' => $idSite,
+                'token_auth' => $tokenAuth,
+            ], $arguments)));
     }
 
     /**
@@ -260,7 +272,7 @@ class Reporting extends AbstractServiceController
      * @param array $arguments
      * @return integer|null
      */
-    protected function getCacheLifetimeForArguments(array $arguments = [])
+    protected function getCacheLifetimeForArguments(array $arguments = []): ?int
     {
         if (array_key_exists('period', $arguments)) {
             $cacheLifetimes = $this->settings['cacheLifetimeByPeriod'];
