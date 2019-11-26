@@ -1,5 +1,8 @@
 prototype(Flowpack.Neos.Matomo:TagManager) < prototype(Neos.Fusion:Tag) {
-    @if.hasContainerId = ${this.containerId}
+    @if {
+        inLiveWorkspace = ${node.context.workspaceName == 'live'}
+        hasContainerId = ${this.containerId}
+    }
 
     settings = ${Configuration.setting('Flowpack.Neos.Matomo')}
     protocol = ${this.settings.protocol}
