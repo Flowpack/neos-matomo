@@ -48,6 +48,15 @@
                 <target>Authentifizierungstoken</target>
             </trans-unit>
 
+            <trans-unit id="error.pageNotLive" xml:space="preserve">
+                <source>Cannot load tracking data for unpublished pages</source>
+                <target>Analysedaten können nicht für unveröffentlichte Seiten geladen werden</target>
+            </trans-unit>
+            <trans-unit id="error.pageLiveUriGenerationFailed" xml:space="preserve">
+                <source>An error occured while trying to generate the url for this page. Please check the logs.</source>
+                <target>Beim Erstellen der Url für diese Seite ist ein Fehler aufgetreten. Bitte prüfen Sie die Logdateien.</target>
+            </trans-unit>
+
             <trans-unit id="warning.http" xml:space="preserve">
                 <source>
                     Be aware that using HTTP for communication with your Matomo host "{0}"

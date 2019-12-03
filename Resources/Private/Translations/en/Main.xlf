@@ -37,6 +37,13 @@
                 <source>Authentication Token</source>
             </trans-unit>
 
+            <trans-unit id="error.pageNotLive" xml:space="preserve">
+                <source>Cannot load tracking data for unpublished pages</source>
+            </trans-unit>
+            <trans-unit id="error.pageLiveUriGenerationFailed" xml:space="preserve">
+                <source>An error occured while trying to generate the url for this page. Please check the logs.</source>
+            </trans-unit>
+
             <trans-unit id="warning.http" xml:space="preserve">
                 <source>
                     Be aware that using HTTP for communication with your Matomo host "{0}"

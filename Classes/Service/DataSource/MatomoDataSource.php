@@ -15,6 +15,7 @@ use Flowpack\Neos\Matomo\Service\Reporting;
 use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
 use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Flowpack\Neos\Matomo\Domain\Dto\ErrorDataResult;
 
 class MatomoDataSource extends AbstractDataSource
 {
@@ -37,6 +38,12 @@ class MatomoDataSource extends AbstractDataSource
     public function getData(NodeInterface $node = NULL, array $arguments = [])
     {
         $data = $this->reportingService->getNodeStatistics($node, $this->controllerContext, $arguments);
+
+        if ($data instanceof ErrorDataResult) {
+            return [
+                'error' => $data
+            ];
+        }
 
         return [
             'data' => $data

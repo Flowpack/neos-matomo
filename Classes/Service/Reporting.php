@@ -11,6 +11,7 @@ namespace Flowpack\Neos\Matomo\Service;
  * source code.
  */
 
+use Flowpack\Neos\Matomo\Domain\Dto\ErrorDataResult;
 use Flowpack\Neos\Matomo\Exception\StatisticsNotAvailableException;
 use Flowpack\Neos\Matomo\Domain\Dto\AbstractDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\TimeSeriesDataResult;
@@ -23,6 +24,7 @@ use GuzzleHttp\Psr7\Uri;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\I18n\Translator;
 use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
@@ -70,6 +72,12 @@ class Reporting extends AbstractServiceController
     protected $apiCache;
 
     /**
+     * @Flow\Inject
+     * @var Translator
+     */
+    protected $translator;
+
+    /**
      * Call the Matomo Reporting API
      *
      * @param string $methodName is the method that should be called e.g. 'SitesManager.getAllSites'
@@ -114,11 +122,19 @@ class Reporting extends AbstractServiceController
             $liveContext = $this->contextFactory->create($contextProperties);
             $liveNode = $liveContext->getNodeByIdentifier($node->getIdentifier());
 
+            if ($liveNode === null) {
+                return new ErrorDataResult([
+                    $this->translator->translateById('error.pageNotLive', [], null, null, 'Main', 'Flowpack.Neos.Matomo')
+                ]);
+            }
+
             try {
                 $pageUrl = $this->getLiveNodeUri($liveNode, $controllerContext)->__toString();
             } catch (\Exception $e) {
                 $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
-                return null;
+                return new ErrorDataResult([
+                    $this->translator->translateById('error.pageLiveUriGenerationFailed', [], null, null, 'Main', 'Flowpack.Neos.Matomo')
+                ]);
             }
 
             if (array_key_exists('type', $arguments) && in_array($arguments['type'],
@@ -164,7 +180,7 @@ class Reporting extends AbstractServiceController
     /**
      * Resolve an URI for the given node in the live workspace (this is where analytics usually are collected)
      *
-     * @param NodeInterface $liveNode
+     * @param NodeInterface|null $liveNode
      * @param ControllerContext $controllerContext
      * @return Uri
      * @throws StatisticsNotAvailableException If the node was not yet published and no live workspace URI can be resolved
