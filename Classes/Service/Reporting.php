@@ -117,7 +117,7 @@ class Reporting extends AbstractServiceController
             try {
                 $pageUrl = $this->getLiveNodeUri($liveNode, $controllerContext)->__toString();
             } catch (\Exception $e) {
-                $this->logger->warning($e->getMessage());
+                $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
                 return null;
             }
 
@@ -192,7 +192,7 @@ class Reporting extends AbstractServiceController
      */
     protected function request(Uri $apiCallUrl, bool $useCache = true, ?int $cacheLifetime = null): ?array
     {
-        $cacheIdentifier = sha1($apiCallUrl->__toString());
+        $cacheIdentifier = sha1((string)$apiCallUrl);
         if ($useCache) {
             try {
                 $cachedResults = $this->apiCache->get($cacheIdentifier);
@@ -201,7 +201,7 @@ class Reporting extends AbstractServiceController
                 }
             } catch (\Exception $e) {
 
-                $this->logger->warning($e->getMessage());
+                $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
             }
         }
 
@@ -218,7 +218,7 @@ class Reporting extends AbstractServiceController
                 return $results;
             }
         } catch (\Exception $e) {
-            $this->logger->warning($e->getMessage());
+            $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
         }
         return null;
     }

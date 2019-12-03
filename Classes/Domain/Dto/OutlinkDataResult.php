@@ -17,7 +17,7 @@ class OutlinkDataResult extends AbstractDataResult
     /**
      * {@inheritdoc}
      */
-    function jsonSerialize(): array
+    public function jsonSerialize(): array
     {
         $totalVisits = 0;
         $visitedOutlinks = [];

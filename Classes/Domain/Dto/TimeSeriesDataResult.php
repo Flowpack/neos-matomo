@@ -17,7 +17,7 @@ class TimeSeriesDataResult extends AbstractDataResult
     /**
      * {@inheritdoc}
      */
-    function jsonSerialize(): array
+    public function jsonSerialize(): array
     {
         $i = 0;
         $totalVisits = 0;
