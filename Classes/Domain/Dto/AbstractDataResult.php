@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Flowpack\Neos\Matomo\Domain\Dto;
 
 /*
@@ -30,7 +31,7 @@ abstract class AbstractDataResult implements \JsonSerializable
     /**
      * @return array
      */
-    function jsonSerialize() {
+    public function jsonSerialize(): array {
         return [];
     }
 

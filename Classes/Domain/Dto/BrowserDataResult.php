@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Domain\Dto;
 
 /*
@@ -14,7 +16,7 @@ class BrowserDataResult extends AbstractDataResult
     /**
      * {@inheritdoc}
      */
-    function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $totalVisits = 0;
         $clientBrowser = [];

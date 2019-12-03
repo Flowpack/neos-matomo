@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Domain\Dto;
 
 /*
@@ -15,7 +17,7 @@ class OutlinkDataResult extends AbstractDataResult
     /**
      * {@inheritdoc}
      */
-    function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $totalVisits = 0;
         $visitedOutlinks = [];

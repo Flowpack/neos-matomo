@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Flowpack\Neos\Matomo\Exception;
 
 /*
@@ -9,7 +11,6 @@ namespace Flowpack\Neos\Matomo\Exception;
  * source code.
  */
 
-use Neos\Flow\Annotations as Flow;
 use Flowpack\Neos\Matomo\Exception;
 
 /**
