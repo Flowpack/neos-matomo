@@ -67,11 +67,11 @@
                     dazu führt, dass der auth_token Ihres Administratoraccounts unverschlüsselt übertragen wird!
                 </target>
             </trans-unit>
-            <trans-unit id="warning.version" xml:space="preserve">
+            <trans-unit id="warning.ip" xml:space="preserve">
                 <source>Could not retrieve IP</source>
                 <target>Die IP konnte nicht ermittelt werden</target>
             </trans-unit>
-            <trans-unit id="warning.ip" xml:space="preserve">
+            <trans-unit id="warning.version" xml:space="preserve">
                 <source>Could not retrieve version</source>
                 <target>Die Version konnte nicht ermittelt werden</target>
             </trans-unit>

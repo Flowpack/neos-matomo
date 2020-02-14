@@ -50,10 +50,10 @@
                     will result in your super user's auth_token being transmitted as an unencrypted URL parameter!
                 </source>
             </trans-unit>
-            <trans-unit id="warning.version" xml:space="preserve">
+            <trans-unit id="warning.ip" xml:space="preserve">
                 <source>Could not retrieve IP</source>
             </trans-unit>
-            <trans-unit id="warning.ip" xml:space="preserve">
+            <trans-unit id="warning.version" xml:space="preserve">
                 <source>Could not retrieve version</source>
             </trans-unit>
 
