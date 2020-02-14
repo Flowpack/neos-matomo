@@ -113,7 +113,7 @@ class Reporting extends AbstractServiceController
         ControllerContext $controllerContext = null,
         array $arguments = [],
         $useCache = true
-    ): AbstractDataResult {
+    ): ?AbstractDataResult {
         if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
             $contextProperties = $node->getContext()->getProperties();
             $contextProperties['workspaceName'] = 'live';
