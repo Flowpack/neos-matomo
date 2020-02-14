@@ -216,7 +216,6 @@ class Reporting extends AbstractServiceController
                     return $cachedResults;
                 }
             } catch (\Exception $e) {
-
                 $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
             }
         }
@@ -225,7 +224,7 @@ class Reporting extends AbstractServiceController
         $this->browser->setRequestEngine($this->browserRequestEngine);
 
         try {
-            $response = $this->browser->request($apiCallUrl);
+            $response = $this->browser->request((string)$apiCallUrl);
             if ($response !== null) {
                 $results = json_decode($response->getBody()->getContents(), true);
                 if ($useCache) {
