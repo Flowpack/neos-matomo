@@ -5,7 +5,9 @@
     "license": "GPL-3.0+",
     "require": {
         "neos/neos": "^3.3 || ^4.0 || ^5.0",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "guzzlehttp/psr7": "*"
+
     },
     "replace": {
         "portachtzig/neos-piwik": "*"
