@@ -92,7 +92,7 @@ class Reporting extends AbstractServiceController
         bool $useCache = true,
         string $sitename = ''
     ): ?array {
-        if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
+        if (!empty($this->settings['host']) && !empty($this->settings['protocol']) && !empty($this->settings['token_auth']) && !empty($this->settings['idSite'])) {
             $apiCallUrl = $this->buildApiCallUrl($sitename, array_merge($arguments, ['method' => $methodName]));
             return $this->request($apiCallUrl, $useCache);
         }
@@ -114,7 +114,7 @@ class Reporting extends AbstractServiceController
         array $arguments = [],
         $useCache = true
     ): ?AbstractDataResult {
-        if (!empty($this->settings['host']) && !empty($this->settings['token_auth'] && !empty($this->settings['token_auth']))) {
+        if (!empty($this->settings['host']) && !empty($this->settings['protocol']) && !empty($this->settings['token_auth']) && !empty($this->settings['idSite'])) {
             $contextProperties = $node->getContext()->getProperties();
             $contextProperties['workspaceName'] = 'live';
 
