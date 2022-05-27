@@ -1,11 +1,12 @@
 Flowpack:
   Neos:
     Matomo:
-      host: ''
+      host: ""
       protocol: https
-      token_auth: ''
-      idSite: ''
-      containerId: ''
+      system: matomo
+      token_auth: ""
+      idSite: ""
+      containerId: ""
       apiTimeout: 10
       cacheLifetimeByPeriod:
         year: 86400
@@ -17,7 +18,7 @@ Neos:
       translation:
         autoInclude:
           Flowpack.Neos.Matomo:
-            - 'NodeTypes/*'
+            - "NodeTypes/*"
     modules:
       seo:
         label: SEO
@@ -26,12 +27,12 @@ Neos:
           matomo:
             label: Matomo
             controller: \Flowpack\Neos\Matomo\Controller\Module\MatomoController
-            description: 'Configure Matomo for your Domains'
+            description: "Configure Matomo for your Domains"
             icon: icon-bar-chart
             actions:
               index:
-                label: 'Configure Matomo'
-                title: 'Configure Matomo'
+                label: "Configure Matomo"
+                title: "Configure Matomo"
     fusion:
       autoInclude:
         Flowpack.Neos.Matomo: true

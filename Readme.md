@@ -102,6 +102,9 @@ This is also needed when using Matomo Tag Manager to allow showing statistics in
 You have to enter the id of the tag manager container you configured in Matomo.
 Here you can also use the longer ids generated for dev & staging environments.
 
++ **system**
+You can change the System you're using so it will target the right Tracking Code.
+
 + **apiTimeout**
 You can change the default timeout of 10 seconds after which the backend will cancel requests to your
 Matomo installation.
@@ -116,6 +119,7 @@ Matomo installation.
           token_auth: 'abcdefg1234567890'
           idSite: 1                                           
           containerId: 'abcdef' # Optional
+          system: 'matomo' # Optional
           apiTimeout: 10 
           cacheLifetimeByPeriod:
             year: 86400
