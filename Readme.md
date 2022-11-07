@@ -104,6 +104,7 @@ Here you can also use the longer ids generated for dev & staging environments.
 
 + **system**
 You can change the System you're using so it will target the right Tracking Code.
+Defaults to `matomo`, if needed, set it to `piwik`
 
 + **apiTimeout**
 You can change the default timeout of 10 seconds after which the backend will cancel requests to your
@@ -119,7 +120,7 @@ Matomo installation.
           token_auth: 'abcdefg1234567890'
           idSite: 1                                           
           containerId: 'abcdef' # Optional
-          system: 'matomo' # Optional
+          system: 'matomo' # Optional, "matomo" or "piwik"
           apiTimeout: 10 
           cacheLifetimeByPeriod:
             year: 86400
