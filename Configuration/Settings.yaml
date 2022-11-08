@@ -3,6 +3,7 @@ Flowpack:
     Matomo:
       host: ''
       protocol: https
+      system: matomo
       token_auth: ''
       idSite: ''
       containerId: ''
