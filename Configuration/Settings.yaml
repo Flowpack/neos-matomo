@@ -11,6 +11,10 @@ Flowpack:
       cacheLifetimeByPeriod:
         year: 86400
         day: 3600
+      privacyManagement:
+        disableCookies: false # this disables all cookies. See https://matomo.org/faq/general/faq_157/
+        requireTrackingConsent: false # requires user's tracking consent before making tracking calls to matomo. See https://developer.matomo.org/guides/tracking-consent
+        requireCookieConsent: false # requires user's consent before setting cookies. See https://developer.matomo.org/guides/tracking-consent
 
 Neos:
   Neos:

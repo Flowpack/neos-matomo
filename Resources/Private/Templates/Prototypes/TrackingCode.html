@@ -1,6 +1,15 @@
 <!-- Matomo -->
 <script type="text/javascript">
   var _paq = _paq || [];
+  <f:if condition="{privacyManagement.disableCookies}">
+    _paq.push(['disableCookies']);
+  </f:if>
+  <f:if condition="{privacyManagement.requireTrackingConsent}">
+    _paq.push(['requireConsent']);
+  </f:if>
+  <f:if condition="{privacyManagement.requireCookieConsent}">
+    _paq.push(['requireCookieConsent']);
+  </f:if>
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
