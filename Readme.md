@@ -115,6 +115,7 @@ You can change three ePrivacy/GDPR related variables and set Matomos tracking be
   - `disableCookies` will disable all cookies if set to `true` (see [Matomo FAQ 157](https://matomo.org/faq/general/faq_157/)).
   - `requireTrackingConsent` will require you to get a user's consent to tracking in general and `requireCookieConsent` will require you to get a user's consent to setting cookies. See [Matomo's tracking consent guide](https://developer.matomo.org/guides/tracking-consent) and/or [content tracking guide](https://developer.matomo.org/guides/content-tracking) for specifics.
   - additional Ressources:
+    - [Lawful basis for processing personal data under GDPR with Matomo](https://matomo.org/blog/2018/04/lawful-basis-for-processing-personal-data-under-gdpr-with-matomo/)
     - [How do I use Matomo Analytics without consent or cookie banner?](https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-without-consent-or-cookie-banner/)
     - [How do I track a visitor without cookies when they have not given consent for tracking cookies?](https://matomo.org/faq/new-to-piwik/how-can-i-still-track-a-visitor-without-cookies-even-if-they-decline-the-cookie-consent/)
 
