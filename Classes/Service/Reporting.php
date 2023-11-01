@@ -22,14 +22,17 @@ use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
 use GuzzleHttp\Psr7\Uri;
 use Neos\Cache\Frontend\VariableFrontend;
-use Neos\ContentRepository\Domain\Service\ContextFactoryInterface;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindClosestNodeFilter;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
+use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\I18n\Translator;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\Controller\ControllerContext;
 use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
-use Neos\Neos\Domain\Service\ContentContext;
+use Neos\Neos\Domain\Service\NodeTypeNameFactory;
 use Neos\Neos\Service\Controller\AbstractServiceController;
 use Neos\Neos\Service\LinkingService;
 
@@ -39,6 +42,10 @@ use Neos\Neos\Service\LinkingService;
  */
 class Reporting extends AbstractServiceController
 {
+    /**
+     * @Flow\Inject
+     */
+    protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
     /**
      * @Flow\Inject
@@ -51,12 +58,6 @@ class Reporting extends AbstractServiceController
      * @var LinkingService
      */
     protected $linkingService;
-
-    /**
-     * @Flow\Inject
-     * @var ContextFactoryInterface
-     */
-    protected $contextFactory;
 
     /**
      * @Flow\Inject
@@ -102,25 +103,26 @@ class Reporting extends AbstractServiceController
     /**
      * Call the Matomo Reporting API for node specific statistics
      *
-     * @param NodeInterface $node the node for which the statistics should be retrieved
+     * @param Node $node the node for which the statistics should be retrieved
      * @param ControllerContext $controllerContext needed to build a valid node uri
      * @param array $arguments contains the httpRequest arguments for the apiCall
      * @param bool $useCache will return previously return data from Matomo if true
-     * @return AbstractDataResult
+     * @return ?AbstractDataResult
      */
     public function getNodeStatistics(
-        NodeInterface $node = null,
-        ControllerContext $controllerContext = null,
+        Node $node,
+        ControllerContext $controllerContext,
         array $arguments = [],
-        $useCache = true
+        bool $useCache = true
     ): ?AbstractDataResult {
         if (!empty($this->settings['host']) && !empty($this->settings['protocol']) && !empty($this->settings['token_auth']) && !empty($this->settings['idSite'])) {
-            $contextProperties = $node->getContext()->getProperties();
-            $contextProperties['workspaceName'] = 'live';
-
-            /** @var ContentContext $liveContext */
-            $liveContext = $this->contextFactory->create($contextProperties);
-            $liveNode = $liveContext->getNodeByIdentifier($node->getIdentifier());
+            $contentRepository = $this->contentRepositoryRegistry->get($node->subgraphIdentity->contentRepositoryId);
+            $liveSubgraph = $contentRepository->getContentGraph()->getSubgraph(
+                $contentRepository->getWorkspaceFinder()->findOneByName(WorkspaceName::forLive())->currentContentStreamId,
+                $node->subgraphIdentity->dimensionSpacePoint,
+                $node->subgraphIdentity->visibilityConstraints
+            );
+            $liveNode = $liveSubgraph->findNodeById($node->nodeAggregateId);
 
             if ($liveNode === null) {
                 return new ErrorDataResult([
@@ -129,9 +131,9 @@ class Reporting extends AbstractServiceController
             }
 
             try {
-                $pageUrl = $this->getLiveNodeUri($liveNode, $controllerContext)->__toString();
+                $pageUrl = (string)$this->getLiveNodeUri($liveNode, $controllerContext);
             } catch (\Exception $e) {
-                $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
+                $this->logger->warning($e->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
                 return new ErrorDataResult([
                     $this->translator->translateById('error.pageLiveUriGenerationFailed', [], null, null, 'Main', 'Flowpack.Neos.Matomo')
                 ]);
@@ -143,7 +145,8 @@ class Reporting extends AbstractServiceController
             }
             $arguments['pageUrl'] = $pageUrl;
 
-            $apiCallUrl = $this->buildApiCallUrl($liveContext->getCurrentSite()->getNodeName(), $arguments);
+            $siteNodeName = $liveSubgraph->findClosestNode($node->nodeAggregateId, FindClosestNodeFilter::create(nodeTypeConstraints: NodeTypeNameFactory::NAME_SITE))->nodeName->value;
+            $apiCallUrl = $this->buildApiCallUrl($siteNodeName, $arguments);
             $cacheLifetime = $this->getCacheLifetimeForArguments($arguments);
             $results = $this->request($apiCallUrl, $useCache, $cacheLifetime);
 
@@ -154,24 +157,18 @@ class Reporting extends AbstractServiceController
             switch ($arguments['view']) {
                 case 'TimeSeriesView':
                     return new TimeSeriesDataResult($results);
-                    break;
                 case 'ColumnView':
                     return new ColumnDataResult($results);
-                    break;
             }
             switch ($arguments['type']) {
                 case 'device':
                     return new DeviceDataResult($results);
-                    break;
                 case 'osFamilies':
                     return new OperatingSystemDataResult($results);
-                    break;
                 case 'browsers':
                     return new BrowserDataResult($results);
-                    break;
                 case 'outlinks':
                     return new OutlinkDataResult($results);
-                    break;
             }
         }
         return null;
@@ -180,22 +177,15 @@ class Reporting extends AbstractServiceController
     /**
      * Resolve an URI for the given node in the live workspace (this is where analytics usually are collected)
      *
-     * @param NodeInterface|null $liveNode
+     * @param Node $liveNode
      * @param ControllerContext $controllerContext
      * @return Uri
-     * @throws StatisticsNotAvailableException If the node was not yet published and no live workspace URI can be resolved
      * @throws \Exception
      */
-    protected function getLiveNodeUri(NodeInterface $liveNode, ControllerContext $controllerContext): Uri
+    protected function getLiveNodeUri(Node $liveNode, ControllerContext $controllerContext): Uri
     {
-        if ($liveNode === null) {
-            throw new StatisticsNotAvailableException('Matomo Statistics are only available on a published node',
-                1445812693);
-        }
         $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, null, 'html', true);
-        $nodeUri = new Uri($nodeUriString);
-
-        return $nodeUri;
+        return new Uri($nodeUriString);
     }
 
     /**
@@ -203,7 +193,7 @@ class Reporting extends AbstractServiceController
      *
      * @param Uri $apiCallUrl
      * @param bool $useCache
-     * @param integer $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
+     * @param ?int $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
      * @return array|null the json decoded content of the api response or null if an error occurs
      */
     protected function request(Uri $apiCallUrl, bool $useCache = true, ?int $cacheLifetime = null): ?array
@@ -216,7 +206,7 @@ class Reporting extends AbstractServiceController
                     return $cachedResults;
                 }
             } catch (\Exception $e) {
-                $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
+                $this->logger->warning($e->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
             }
         }
 
@@ -225,15 +215,13 @@ class Reporting extends AbstractServiceController
 
         try {
             $response = $this->browser->request((string)$apiCallUrl);
-            if ($response !== null) {
-                $results = json_decode($response->getBody()->getContents(), true);
-                if ($useCache) {
-                    $this->apiCache->set($cacheIdentifier, $results, [], $cacheLifetime);
-                }
-                return $results;
+            $results = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            if ($useCache) {
+                $this->apiCache->set($cacheIdentifier, $results, [], $cacheLifetime);
             }
+            return $results;
         } catch (\Exception $e) {
-            $this->logger->warning($e->getMessage(), \Neos\Flow\Log\Utility\LogEnvironment::fromMethodName(__METHOD__));
+            $this->logger->warning($e->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
         }
         return null;
     }
@@ -248,7 +236,7 @@ class Reporting extends AbstractServiceController
      */
     protected function buildApiCallUrl(string $sitename = '', array $arguments = []): Uri
     {
-        $arguments = array_filter($arguments, function ($value, $key) {
+        $arguments = array_filter($arguments, static function ($value, $key) {
             return !empty($value) && !in_array($key, ['view', 'device', 'type']);
         }, ARRAY_FILTER_USE_BOTH);
 
@@ -285,7 +273,7 @@ class Reporting extends AbstractServiceController
      * Get the default cache lifetime based on query parameters
      *
      * @param array $arguments
-     * @return integer|null
+     * @return int|null
      */
     protected function getCacheLifetimeForArguments(array $arguments = []): ?int
     {

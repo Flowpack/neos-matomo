@@ -12,9 +12,9 @@ namespace Flowpack\Neos\Matomo\Service\DataSource;
  */
 
 use Flowpack\Neos\Matomo\Service\Reporting;
+use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
 use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Service\DataSource\AbstractDataSource;
-use Neos\ContentRepository\Domain\Model\NodeInterface;
 use Flowpack\Neos\Matomo\Domain\Dto\ErrorDataResult;
 
 class MatomoDataSource extends AbstractDataSource
@@ -35,8 +35,12 @@ class MatomoDataSource extends AbstractDataSource
      *
      * {@inheritdoc}
      */
-    public function getData(NodeInterface $node = NULL, array $arguments = [])
+    public function getData(Node $node = NULL, array $arguments = [])
     {
+        if ($node === null) {
+            return [];
+        }
+
         $data = $this->reportingService->getNodeStatistics($node, $this->controllerContext, $arguments);
 
         if ($data instanceof ErrorDataResult) {
