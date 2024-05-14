@@ -5,14 +5,14 @@ prototype(Flowpack.Neos.Matomo:TrackingOptOut) < prototype(Neos.Neos:ContentComp
         content = Neos.Fusion:Tag {
             tagName = 'iframe'
             attributes {
-                style = Neos.Fusion:Array {
+                style = Neos.Fusion:Join {
                     border = ${'border: ' + q(node).property('border') + ';'}
                     height = ${'height: ' + q(node).property('height') + ';'}
                     width = ${'width: ' + q(node).property('width') + ';'}
                 }
-                src = Neos.Fusion:Array {
+                src = Neos.Fusion:Join {
                     trackingUrl = ${Configuration.setting('Flowpack.Neos.Matomo.protocol') + '://' + Configuration.setting('Flowpack.Neos.Matomo.host') + '?'}
-                    parameters = Neos.Fusion:RawArray {
+                    parameters = Neos.Fusion:DataStructure {
                         module = 'module=CoreAdminHome'
                         action = 'action=optOut'
                         language = ${'language=' + String.rawUrlEncode(q(node).property('language'))}
