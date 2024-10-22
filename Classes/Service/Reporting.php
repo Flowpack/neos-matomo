@@ -168,24 +168,18 @@ class Reporting extends AbstractServiceController
             switch ($arguments['view']) {
                 case 'TimeSeriesView':
                     return new TimeSeriesDataResult($results);
-                    break;
                 case 'ColumnView':
                     return new ColumnDataResult($results);
-                    break;
             }
             switch ($arguments['type']) {
                 case 'device':
                     return new DeviceDataResult($results);
-                    break;
                 case 'osFamilies':
                     return new OperatingSystemDataResult($results);
-                    break;
                 case 'browsers':
                     return new BrowserDataResult($results);
-                    break;
                 case 'outlinks':
                     return new OutlinkDataResult($results);
-                    break;
             }
         }
         return null;
