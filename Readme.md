@@ -88,11 +88,11 @@ You can also use the included backend module then to verify your configuration.
 + **host**
 Enter your Matomo installations hostname without protocol. 
 
-+ **host**
++ **protocol**
 You should always have your Matomo installation configured with https, but you can change it for testing purposes.
 
 + **token_auth**
-You have to enter a valid auth token of a Matomo user who has the `view` permissions for the configured site.
+You have to enter a valid [auth token](https://matomo.org/faq/general/faq_114/) of a Matomo user who has the `view` permissions for the configured site.
 
 + **idSite**
 You have to enter the id of the site you configured in Matomo.
