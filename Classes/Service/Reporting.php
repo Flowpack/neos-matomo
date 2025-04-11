@@ -107,10 +107,11 @@ class Reporting extends AbstractServiceController
     /**
      * Call the Matomo Reporting API for node specific statistics
      *
-     * @param Node $node the node for which the statistics should be retrieved
+     * @param Node|null $node the node for which the statistics should be retrieved
+     * @param ActionRequest $actionRequest
      * @param array $arguments contains the httpRequest arguments for the apiCall
      * @param bool $useCache will return previously return data from Matomo if true
-     * @return AbstractDataResult
+     * @return AbstractDataResult|null
      */
     public function getNodeStatistics(
         ?Node $node,
@@ -200,7 +201,7 @@ class Reporting extends AbstractServiceController
      *
      * @param UriInterface $apiCallUrl
      * @param bool $useCache
-     * @param integer $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
+     * @param int|null $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
      * @return array|null the json decoded content of the api response or null if an error occurs
      */
     protected function request(UriInterface $apiCallUrl, bool $useCache = true, ?int $cacheLifetime = null): ?array
