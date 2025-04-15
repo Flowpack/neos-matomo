@@ -21,70 +21,50 @@ use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\TimeSeriesDataResult;
 use GuzzleHttp\Psr7\Uri;
 use Neos\Cache\Frontend\VariableFrontend;
+use Neos\ContentRepository\Core\Feature\Security\Exception\AccessDenied;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindClosestNodeFilter;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
-use Neos\ContentRepository\Core\Projection\ContentGraph\VisibilityConstraints;
 use Neos\ContentRepository\Core\SharedModel\Node\NodeAddress;
 use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Http\Client\Browser;
 use Neos\Flow\Http\Client\CurlEngine;
+use Neos\Flow\I18n\Exception\IndexOutOfBoundsException;
+use Neos\Flow\I18n\Exception\InvalidFormatPlaceholderException;
 use Neos\Flow\I18n\Translator;
+use Neos\Flow\Log\Utility\LogEnvironment;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Neos\Domain\Service\NodeTypeNameFactory;
+use Neos\Neos\Domain\SubtreeTagging\NeosVisibilityConstraints;
 use Neos\Neos\FrontendRouting\NodeUriBuilderFactory;
 use Neos\Neos\FrontendRouting\Options;
 use Neos\Neos\Service\Controller\AbstractServiceController;
 use Psr\Http\Message\UriInterface;
 
-/**
- * Class Reporting
- * @package Flowpack\Neos\Matomo\Service
- */
 class Reporting extends AbstractServiceController
 {
-    /**
-     * @Flow\Inject
-     */
+
+    #[Flow\Inject]
     protected ContentRepositoryRegistry $contentRepositoryRegistry;
 
-    /**
-     * @Flow\Inject
-     * @var CurlEngine
-     */
-    protected $browserRequestEngine;
+    #[Flow\Inject]
+    protected CurlEngine $browserRequestEngine;
+
+    #[Flow\Inject]
+    protected NodeUriBuilderFactory $nodeUriBuilderFactory;
+
+    #[Flow\Inject]
+    protected Browser $browser;
 
     /**
-     * @Flow\Inject
-     * @var NodeUriBuilderFactory
-     */
-    protected $nodeUriBuilderFactory;
-
-    /**
-     * @Flow\Inject
-     * @var ContentRepositoryRegistry
-     */
-    protected $contentRepositoryRegistry;
-
-    /**
-     * @Flow\Inject
-     * @var Browser
-     */
-    protected $browser;
-
-    /**
-     * @Flow\Inject
-     *
      * @var VariableFrontend
      */
+    #[Flow\Inject]
     protected $apiCache;
 
-    /**
-     * @Flow\Inject
-     * @var Translator
-     */
-    protected $translator;
+    #[Flow\Inject]
+    protected Translator $translator;
 
     /**
      * Call the Matomo Reporting API
@@ -93,7 +73,6 @@ class Reporting extends AbstractServiceController
      * @param array $arguments contains the httpRequest arguments for the apiCall
      * @param bool $useCache will return previously return data from Matomo if true
      * @param string $sitename is the optional identifier for the multi site configuration, if not set the first configured siteId and tokenAuth will be used
-     * @return array|null
      */
     public function callAPI(
         string $methodName,
@@ -115,19 +94,19 @@ class Reporting extends AbstractServiceController
      * @param ActionRequest $actionRequest
      * @param array $arguments contains the httpRequest arguments for the apiCall
      * @param bool $useCache will return previously return data from Matomo if true
-     * @return AbstractDataResult|null
+     * @throws InvalidFormatPlaceholderException|AccessDenied|IndexOutOfBoundsException
      */
     public function getNodeStatistics(
         ?Node $node,
         ActionRequest $actionRequest,
-        array $arguments,
+        array $arguments = [],
         bool $useCache = true
     ): ?AbstractDataResult {
-        if (!empty($this->settings['host']) && !empty($this->settings['protocol']) && !empty($this->settings['token_auth']) && !empty($this->settings['idSite'])) {
+        if ($node && !empty($this->settings['host']) && !empty($this->settings['protocol']) && !empty($this->settings['token_auth']) && !empty($this->settings['idSite'])) {
             $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
             $subgraph = $contentRepository->getContentGraph(WorkspaceName::forLive())->getSubgraph(
                 $node->dimensionSpacePoint,
-                VisibilityConstraints::frontend()
+                NeosVisibilityConstraints::excludeDisabled()
             );
 
             if ($node->workspaceName->isLive()) {
@@ -240,10 +219,6 @@ class Reporting extends AbstractServiceController
     /**
      * Build api call url based on the given arguments.
      * Also filters some arguments we don't need in the request to the Matomo API.
-     *
-     * @param string $sitename
-     * @param array $arguments
-     * @return UriInterface
      */
     protected function buildApiCallUrl(string $sitename = '', array $arguments = []): UriInterface
     {
@@ -282,9 +257,6 @@ class Reporting extends AbstractServiceController
 
     /**
      * Get the default cache lifetime based on query parameters
-     *
-     * @param array $arguments
-     * @return int|null
      */
     protected function getCacheLifetimeForArguments(array $arguments = []): ?int
     {

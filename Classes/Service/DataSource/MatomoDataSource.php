@@ -19,11 +19,8 @@ use Flowpack\Neos\Matomo\Domain\Dto\ErrorDataResult;
 
 class MatomoDataSource extends AbstractDataSource
 {
-    /**
-     * @Flow\Inject
-     * @var Reporting
-     */
-    protected $reportingService;
+    #[Flow\Inject]
+    protected Reporting $reportingService;
 
     /**
      * @var string
@@ -35,7 +32,7 @@ class MatomoDataSource extends AbstractDataSource
      *
      * {@inheritdoc}
      */
-    public function getData(Node $node = NULL, array $arguments = [])
+    public function getData(Node $node = NULL, array $arguments = []): array
     {
         if ($node === null) {
             return [];

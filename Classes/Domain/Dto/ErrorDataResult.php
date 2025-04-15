@@ -19,7 +19,7 @@ class ErrorDataResult extends AbstractDataResult
     public function jsonSerialize(): array
     {
         return [
-            'message' => join(',', $this->results)
+            'message' => implode(',', $this->results)
         ];
     }
 }
