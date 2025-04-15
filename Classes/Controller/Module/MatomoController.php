@@ -20,17 +20,12 @@ use Neos\Neos\Controller\Module\AbstractModuleController;
  */
 class MatomoController extends AbstractModuleController
 {
-    /**
-     * @Flow\Inject
-     * @var Reporting
-     */
-    protected $reportingService;
+    #[Flow\Inject]
+    protected Reporting $reportingService;
 
     /**
      * An edit view for the global Matomo settings and
      * Management Module for Matomo Sites through Matomo API
-     *
-     * @return void
      */
     public function indexAction(): void
     {

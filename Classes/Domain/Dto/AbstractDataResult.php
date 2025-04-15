@@ -15,22 +15,14 @@ abstract class AbstractDataResult implements \JsonSerializable
 
     /**
      * The json decoded results
-     *
-     * @var array
      */
-    protected $results;
+    protected array $results;
 
-    /**
-     * @param array $results
-     */
     public function __construct(array $results)
     {
         $this->results = $results;
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         return [];
