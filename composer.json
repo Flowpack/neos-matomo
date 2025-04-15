@@ -9,6 +9,9 @@
         "guzzlehttp/psr7": "*"
 
     },
+    "scripts": {
+        "lint:phpstan": "../../../bin/phpstan analyse"
+    },
     "replace": {
         "portachtzig/neos-piwik": "*"
     },

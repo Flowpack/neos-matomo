@@ -40,8 +40,7 @@ class MatomoDataSource extends AbstractDataSource
         if ($node === null) {
             return [];
         }
-
-        $data = $this->reportingService->getNodeStatistics($node, $this->controllerContext, $arguments);
+        $data = $this->reportingService->getNodeStatistics($node, $this->controllerContext->getRequest(), $arguments);
 
         if ($data instanceof ErrorDataResult) {
             return [
@@ -53,5 +52,4 @@ class MatomoDataSource extends AbstractDataSource
             'data' => $data
         ];
     }
-
 }

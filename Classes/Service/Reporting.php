@@ -11,30 +11,32 @@ namespace Flowpack\Neos\Matomo\Service;
  * source code.
  */
 
-use Flowpack\Neos\Matomo\Domain\Dto\ErrorDataResult;
-use Flowpack\Neos\Matomo\Exception\StatisticsNotAvailableException;
 use Flowpack\Neos\Matomo\Domain\Dto\AbstractDataResult;
-use Flowpack\Neos\Matomo\Domain\Dto\TimeSeriesDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\ColumnDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\DeviceDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\ErrorDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OperatingSystemDataResult;
-use Flowpack\Neos\Matomo\Domain\Dto\BrowserDataResult;
 use Flowpack\Neos\Matomo\Domain\Dto\OutlinkDataResult;
+use Flowpack\Neos\Matomo\Domain\Dto\TimeSeriesDataResult;
 use GuzzleHttp\Psr7\Uri;
 use Neos\Cache\Frontend\VariableFrontend;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindClosestNodeFilter;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Node;
+use Neos\ContentRepository\Core\Projection\ContentGraph\VisibilityConstraints;
+use Neos\ContentRepository\Core\SharedModel\Node\NodeAddress;
 use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\I18n\Translator;
-use Neos\Flow\Log\Utility\LogEnvironment;
-use Neos\Flow\Mvc\Controller\ControllerContext;
-use Neos\Flow\Http\Client\CurlEngine;
 use Neos\Flow\Http\Client\Browser;
+use Neos\Flow\Http\Client\CurlEngine;
+use Neos\Flow\I18n\Translator;
+use Neos\Flow\Mvc\ActionRequest;
 use Neos\Neos\Domain\Service\NodeTypeNameFactory;
+use Neos\Neos\FrontendRouting\NodeUriBuilderFactory;
+use Neos\Neos\FrontendRouting\Options;
 use Neos\Neos\Service\Controller\AbstractServiceController;
-use Neos\Neos\Service\LinkingService;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class Reporting
@@ -55,9 +57,15 @@ class Reporting extends AbstractServiceController
 
     /**
      * @Flow\Inject
-     * @var LinkingService
+     * @var NodeUriBuilderFactory
      */
-    protected $linkingService;
+    protected $nodeUriBuilderFactory;
+
+    /**
+     * @Flow\Inject
+     * @var ContentRepositoryRegistry
+     */
+    protected $contentRepositoryRegistry;
 
     /**
      * @Flow\Inject
@@ -103,26 +111,30 @@ class Reporting extends AbstractServiceController
     /**
      * Call the Matomo Reporting API for node specific statistics
      *
-     * @param Node $node the node for which the statistics should be retrieved
-     * @param ControllerContext $controllerContext needed to build a valid node uri
+     * @param Node|null $node the node for which the statistics should be retrieved
+     * @param ActionRequest $actionRequest
      * @param array $arguments contains the httpRequest arguments for the apiCall
      * @param bool $useCache will return previously return data from Matomo if true
-     * @return ?AbstractDataResult
+     * @return AbstractDataResult|null
      */
     public function getNodeStatistics(
-        Node $node,
-        ControllerContext $controllerContext,
-        array $arguments = [],
+        ?Node $node,
+        ActionRequest $actionRequest,
+        array $arguments,
         bool $useCache = true
     ): ?AbstractDataResult {
         if (!empty($this->settings['host']) && !empty($this->settings['protocol']) && !empty($this->settings['token_auth']) && !empty($this->settings['idSite'])) {
-            $contentRepository = $this->contentRepositoryRegistry->get($node->subgraphIdentity->contentRepositoryId);
-            $liveSubgraph = $contentRepository->getContentGraph()->getSubgraph(
-                $contentRepository->getWorkspaceFinder()->findOneByName(WorkspaceName::forLive())->currentContentStreamId,
-                $node->subgraphIdentity->dimensionSpacePoint,
-                $node->subgraphIdentity->visibilityConstraints
+            $contentRepository = $this->contentRepositoryRegistry->get($node->contentRepositoryId);
+            $subgraph = $contentRepository->getContentGraph(WorkspaceName::forLive())->getSubgraph(
+                $node->dimensionSpacePoint,
+                VisibilityConstraints::frontend()
             );
-            $liveNode = $liveSubgraph->findNodeById($node->nodeAggregateId);
+
+            if ($node->workspaceName->isLive()) {
+                $liveNode = $node;
+            } else {
+                $liveNode = $subgraph->findNodeById($node->aggregateId);
+            }
 
             if ($liveNode === null) {
                 return new ErrorDataResult([
@@ -131,7 +143,7 @@ class Reporting extends AbstractServiceController
             }
 
             try {
-                $pageUrl = (string)$this->getLiveNodeUri($liveNode, $controllerContext);
+                $pageUrl = (string)$this->getLiveNodeUri($liveNode, $actionRequest);
             } catch (\Exception $e) {
                 $this->logger->warning($e->getMessage(), LogEnvironment::fromMethodName(__METHOD__));
                 return new ErrorDataResult([
@@ -145,8 +157,12 @@ class Reporting extends AbstractServiceController
             }
             $arguments['pageUrl'] = $pageUrl;
 
-            $siteNodeName = $liveSubgraph->findClosestNode($node->nodeAggregateId, FindClosestNodeFilter::create(nodeTypeConstraints: NodeTypeNameFactory::NAME_SITE))->nodeName->value;
-            $apiCallUrl = $this->buildApiCallUrl($siteNodeName, $arguments);
+            $siteNode = $subgraph->findClosestNode(
+                $node->aggregateId,
+                FindClosestNodeFilter::create(nodeTypes: NodeTypeNameFactory::NAME_SITE)
+            );
+
+            $apiCallUrl = $this->buildApiCallUrl($siteNode->name->value, $arguments);
             $cacheLifetime = $this->getCacheLifetimeForArguments($arguments);
             $results = $this->request($apiCallUrl, $useCache, $cacheLifetime);
 
@@ -176,27 +192,22 @@ class Reporting extends AbstractServiceController
 
     /**
      * Resolve an URI for the given node in the live workspace (this is where analytics usually are collected)
-     *
-     * @param Node $liveNode
-     * @param ControllerContext $controllerContext
-     * @return Uri
-     * @throws \Exception
      */
-    protected function getLiveNodeUri(Node $liveNode, ControllerContext $controllerContext): Uri
+    protected function getLiveNodeUri(Node $liveNode, ActionRequest $actionRequest): UriInterface
     {
-        $nodeUriString = $this->linkingService->createNodeUri($controllerContext, $liveNode, null, 'html', true);
-        return new Uri($nodeUriString);
+        $nodeUriBuilder = $this->nodeUriBuilderFactory->forActionRequest($actionRequest);
+        return $nodeUriBuilder->uriFor(NodeAddress::fromNode($liveNode), Options::createForceAbsolute()->withCustomFormat('html'));
     }
 
     /**
      * Send a request via curl to the api endpoint and returns the response
      *
-     * @param Uri $apiCallUrl
+     * @param UriInterface $apiCallUrl
      * @param bool $useCache
      * @param ?int $cacheLifetime of this entry in seconds. If NULL is specified, the default lifetime is used. "0" means unlimited lifetime.
      * @return array|null the json decoded content of the api response or null if an error occurs
      */
-    protected function request(Uri $apiCallUrl, bool $useCache = true, ?int $cacheLifetime = null): ?array
+    protected function request(UriInterface $apiCallUrl, bool $useCache = true, ?int $cacheLifetime = null): ?array
     {
         $cacheIdentifier = sha1((string)$apiCallUrl);
         if ($useCache) {
@@ -232,9 +243,9 @@ class Reporting extends AbstractServiceController
      *
      * @param string $sitename
      * @param array $arguments
-     * @return Uri
+     * @return UriInterface
      */
-    protected function buildApiCallUrl(string $sitename = '', array $arguments = []): Uri
+    protected function buildApiCallUrl(string $sitename = '', array $arguments = []): UriInterface
     {
         $arguments = array_filter($arguments, static function ($value, $key) {
             return !empty($value) && !in_array($key, ['view', 'device', 'type']);
