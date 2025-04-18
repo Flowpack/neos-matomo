@@ -8,9 +8,9 @@ prototype(Flowpack.Neos.Matomo:TrackingCode) < prototype(Neos.Fusion:Template) {
     host = ${this.settings.host}
     system = ${this.settings.system}
     idSite = ${this.settings.idSite}
-    idSite.@process.multiSite = ${Type.isArray(value) ? value[site.name] || Array.first(value) : value}
+    idSite.@process.multiSite = ${Type.isArray(value) ? value[site.name.value] || Array.first(value) : value}
     containerId = ${this.settings.containerId}
-    containerId.@process.containerId = ${Type.isArray(value) ? value[site.name] || Array.first(value) : value}
+    containerId.@process.containerId = ${Type.isArray(value) ? value[site.name.value] || Array.first(value) : value}
     privacyManagement = ${this.settings.privacyManagement}
 
     // Show tracking code only in live workspace and if all necessary parameters are set
