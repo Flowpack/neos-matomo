@@ -1,6 +1,6 @@
 prototype(Flowpack.Neos.Matomo:TagManager) < prototype(Neos.Fusion:Tag) {
     @if {
-        inLiveWorkspace = ${node.context.workspaceName == 'live'}
+        inLiveWorkspace = ${!renderingMode.isEdit}
         hasContainerId = ${this.containerId}
     }
 
