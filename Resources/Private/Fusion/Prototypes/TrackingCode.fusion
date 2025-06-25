@@ -15,7 +15,7 @@ prototype(Flowpack.Neos.Matomo:TrackingCode) < prototype(Neos.Fusion:Template) {
 
     // Show tracking code only in live workspace and if all necessary parameters are set
     @if {
-        inLiveWorkspace = ${node.context.workspaceName == 'live'}
+        inLiveWorkspace = ${!renderingMode.isEdit}
         hostIsSet = ${this.host}
         idSiteIsSet = ${this.idSite}
         notUsingTagManager = ${!this.containerId}
