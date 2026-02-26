@@ -32,7 +32,7 @@ class MatomoDataSource extends AbstractDataSource
      *
      * {@inheritdoc}
      */
-    public function getData(Node $node = NULL, array $arguments = []): array
+    public function getData(?Node $node = NULL, array $arguments = []): array
     {
         if ($node === null) {
             return [];
